@@ -41,8 +41,12 @@ function LegacyTransportadorRedirect() {
   const params = useParams();
   const rest = params['*'] ?? '';
   const normalized = rest.replace(/^\/+/, '');
-  const target = normalized ? `/transportador/dashboard/${normalized}` : '/transportador/dashboard';
-  return <Navigate to={target} replace />;
+
+  if (!normalized || normalized === 'transportador') {
+    return <Navigate to="/transportador/dashboard" replace />;
+  }
+
+  return <Navigate to={`/transportador/dashboard/${normalized}`} replace />;
 }
 
 export default function App() {
