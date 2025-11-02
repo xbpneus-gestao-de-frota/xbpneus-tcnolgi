@@ -8,6 +8,7 @@ import ErrorState from "../../../components/ErrorState";
 import EmptyState from "../../../components/EmptyState";
 import PageHeader from "../../../components/PageHeader";
 import api from "../../../api/http";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 const CANDIDATES = ["/api/transportador/empresas/filiais/", "/api/filiais/"];
 
@@ -112,13 +113,13 @@ export default function FiliaisList() {
       render: (row) => (
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate(`/dashboard/filiais/${row.id}`)}
+            onClick={() => navigate(transportadorPath(["filiais", row.id]))}
             className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
           >
             Ver
           </button>
           <button
-            onClick={() => navigate(`/dashboard/filiais/${row.id}/edit`)}
+            onClick={() => navigate(transportadorPath(["filiais", row.id, "edit"]))}
             className="px-3 py-1 text-sm rounded bg-green-500 text-white hover:bg-green-600"
           >
             Editar
@@ -175,7 +176,7 @@ export default function FiliaisList() {
           )}
         </PageHeader>
         <button
-          onClick={() => navigate("/dashboard/filiais/new")}
+          onClick={() => navigate(transportadorPath(["filiais", "new"]))}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           + Nova Filial
@@ -233,7 +234,7 @@ export default function FiliaisList() {
       {data && data.length === 0 ? (
         <EmptyState
           message="Nenhuma filial encontrada"
-          action={() => navigate("/dashboard/filiais/new")}
+          action={() => navigate(transportadorPath(["filiais", "new"]))}
           actionLabel="Criar primeira filial"
         />
       ) : (

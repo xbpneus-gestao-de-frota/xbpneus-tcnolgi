@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function ComprasDashboard() {
-  const items = [["Requisições", "/transportador/dashboard/compras/requisicoes"], ["Cotações", "/transportador/dashboard/compras/cotacoes"], ["Ordens de Compra", "/transportador/dashboard/compras/ocs"], ["Fornecedores", "/transportador/dashboard/compras/fornecedores"]];
+  const items = [
+    ["Requisições", transportadorPath("compras/requisicoes")],
+    ["Cotações", transportadorPath("compras/cotacoes")],
+    ["Ordens de Compra", transportadorPath("compras/ocs")],
+    ["Fornecedores", transportadorPath("fornecedores/fornecedores")],
+  ];
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard — Compras</h1>

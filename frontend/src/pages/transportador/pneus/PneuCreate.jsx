@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../api/http";
 import PageHeader from "../../../components/PageHeader";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function PneuCreate() {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ export default function PneuCreate() {
       };
 
       await api.post("/api/transportador/pneus/pneus/", payload);
-      navigate("/dashboard/pneus/lista");
+      navigate(transportadorPath(["pneus", "lista"]));
     } catch (ex) {
       console.error("Erro ao criar pneu:", ex);
       setError(ex.response?.data?.detail || "Falha ao criar pneu. Verifique os dados e tente novamente.");
@@ -411,7 +412,7 @@ export default function PneuCreate() {
             
             <button
               type="button"
-              onClick={() => navigate("/dashboard/pneus/lista")}
+              onClick={() => navigate(transportadorPath(["pneus", "lista"]))}
               className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
             >
               Cancelar

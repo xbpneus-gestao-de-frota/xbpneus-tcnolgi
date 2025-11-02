@@ -17,7 +17,22 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+
+def _split_env_list(value):
+    """Split comma-separated environment values into a clean Python list."""
+    if not value:
+        return []
+    if isinstance(value, (list, tuple)):
+        return [item for item in value if item]
+    return [item.strip() for item in str(value).split(",") if item.strip()]
+
+
+ALLOWED_HOSTS = _split_env_list(config("ALLOWED_HOSTS", default=""))
+if not ALLOWED_HOSTS:
+    if DEBUG:
+        ALLOWED_HOSTS = ["*"]
+    else:
+        raise RuntimeError("ALLOWED_HOSTS must be defined when DEBUG is False.")
 
 
 # Application definition
@@ -30,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_spectacular",
     "rest_framework_simplejwt",
     "corsheaders",
     "backend.transportador",
@@ -126,7 +142,23 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOW_ALL_ORIGINS = True
+_cors_allowed_origins = _split_env_list(config("CORS_ALLOWED_ORIGINS", default=""))
+
+if _cors_allowed_origins:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = _cors_allowed_origins
+else:
+    CORS_ALLOW_ALL_ORIGINS = config(
+        "CORS_ALLOW_ALL_ORIGINS", default=DEBUG, cast=bool
+    )
+    if CORS_ALLOW_ALL_ORIGINS:
+        CORS_ALLOWED_ORIGINS = []
+    elif DEBUG:
+        CORS_ALLOWED_ORIGINS = []
+    else:
+        raise RuntimeError(
+            "CORS_ALLOWED_ORIGINS must be set or CORS_ALLOW_ALL_ORIGINS enabled when DEBUG is False."
+        )
 
 # Configuração JWT
 SIMPLE_JWT = {

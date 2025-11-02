@@ -1,4 +1,5 @@
 import api from "./http";
+import API_ENDPOINTS from "./config";
 import { jwtDecode } from "jwt-decode";
 
 const ROLE_MAP = {
@@ -124,7 +125,9 @@ export async function login(email, password) {
   const timestamp = Date.now();
 
   try {
-    const { data } = await api.post(`/api/token/?t=${timestamp}`, { email, password });
+    const loginUrl = new URL(API_ENDPOINTS.auth.login);
+    loginUrl.searchParams.set("t", timestamp.toString());
+    const { data } = await api.post(loginUrl.toString(), { email, password });
     return persistSession(
       data.access,
       data.refresh,
@@ -198,32 +201,6 @@ export function isTokenValid() {
 }
 
 /**
- * Configura um intervalo para renovar o token automaticamente antes de expirar
- */
-export function setupTokenRefreshInterval() {
-  const interval = setInterval(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-        const timeUntilExpiry = (decoded.exp - currentTime) * 1000;
-        
-        // Se faltam menos de 5 minutos para expirar, renovar
-        if (timeUntilExpiry > 0 && timeUntilExpiry < 5 * 60 * 1000) {
-          console.log("Renovando token automaticamente...");
-          refreshToken();
-        }
-      } catch (e) {
-        console.error("Erro ao verificar expiração do token:", e);
-      }
-    }
-  }, 60000); // Verificar a cada minuto
-  
-  return interval;
-}
-
-/**
  * Renova o token de acesso usando o refresh token
  */
 export async function refreshToken() {
@@ -233,7 +210,7 @@ export async function refreshToken() {
       throw new Error("Refresh token não disponível");
     }
     
-    const { data } = await api.post("/api/token/refresh/", { refresh });
+    const { data } = await api.post("/api/token/refresh/", { refresh }, { _skipAuthRefresh: true });
     if (data.access) {
       localStorage.setItem("access_token", data.access);
       console.log("Token renovado com sucesso");

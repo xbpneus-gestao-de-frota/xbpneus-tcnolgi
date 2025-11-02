@@ -5,6 +5,7 @@ import PageHeader from "../../../components/PageHeader";
 import Loader from "../../../components/Loader";
 import ErrorState from "../../../components/ErrorState";
 import Button from "../../../components/ui/Button";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function VeiculoEdit() {
   const { id } = useParams();
@@ -161,7 +162,7 @@ export default function VeiculoEdit() {
       };
 
       await api.put(`/api/transportador/frota/veiculos/${id}/`, payload);
-      navigate("/dashboard/frota/veiculos");
+      navigate(transportadorPath(["frota", "veiculos"]));
     } catch (ex) {
       console.error("Erro ao atualizar veículo:", ex);
       setSaveError(ex.response?.data?.detail || "Falha ao atualizar veículo. Verifique os dados e tente novamente.");
@@ -475,7 +476,7 @@ export default function VeiculoEdit() {
             <Button 
               type="button" 
               variant="secondary"
-              onClick={() => navigate("/dashboard/frota/veiculos")}
+              onClick={() => navigate(transportadorPath(["frota", "veiculos"]))}
               disabled={saving}
             >
               Cancelar

@@ -6,9 +6,11 @@ import {
   ClipboardList,
   History,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  Plus
 } from 'lucide-react';
 import StatsCard from '../../../components/common/StatsCard';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function EstoqueDashboard() {
   const modules = [
@@ -16,7 +18,7 @@ export default function EstoqueDashboard() {
       title: 'Movimentações',
       description: 'Visualizar e gerenciar todas as entradas e saídas do estoque',
       icon: History,
-      to: '/dashboard/estoque-dashboard/movimentacoes',
+      to: transportadorPath('estoque-dashboard/movimentacoes'),
       color: 'blue',
       stats: '120'
     },
@@ -24,7 +26,7 @@ export default function EstoqueDashboard() {
       title: 'Itens em Estoque',
       description: 'Consultar o inventário atual de todos os itens',
       icon: Package,
-      to: '/dashboard/estoque-dashboard/itens',
+      to: transportadorPath('estoque-dashboard/itens'),
       color: 'green',
       stats: '500'
     },
@@ -32,21 +34,21 @@ export default function EstoqueDashboard() {
       title: 'Entradas',
       description: 'Registrar a entrada de novos itens no estoque',
       icon: Truck,
-      to: '/dashboard/estoque-dashboard/entradas',
+      to: transportadorPath('estoque-dashboard/entradas'),
       color: 'purple'
     },
     {
       title: 'Saídas',
       description: 'Registrar a saída de itens do estoque',
       icon: Truck,
-      to: '/dashboard/estoque-dashboard/saidas',
+      to: transportadorPath('estoque-dashboard/saidas'),
       color: 'orange'
     },
     {
       title: 'Relatórios',
       description: 'Gerar relatórios de estoque e movimentações',
       icon: ClipboardList,
-      to: '/dashboard/estoque-dashboard/relatorios',
+      to: transportadorPath('estoque-dashboard/relatorios'),
       color: 'red'
     }
   ];
@@ -156,8 +158,8 @@ export default function EstoqueDashboard() {
       <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-white">Últimas Movimentações</h3>
-          <Link 
-            to="/dashboard/estoque-dashboard/movimentacoes" 
+          <Link
+            to={transportadorPath('estoque-dashboard/movimentacoes')}
             className="text-blue-400 hover:text-blue-300 text-sm font-medium"
           >
             Ver todas →

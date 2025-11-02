@@ -10,6 +10,7 @@ import ErrorState from "../../../components/ErrorState";
 import EmptyState from "../../../components/EmptyState";
 import PageHeader from "../../../components/PageHeader";
 import api from "../../../api/http";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 const CANDIDATES = ["/api/transportador/frota/veiculos/", "/api/frota/veiculos/", "/api/veiculos/"];
 const MOCK = ()=>[{ id:1, placa:'ABC1D23', modelo:'Cavalo Mecânico', km:458200, motorista:'João Silva' }];
@@ -74,13 +75,13 @@ export default function ListPage(){
       "render": (row) => (
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate(`/dashboard/frota/veiculos/${row.id}`)}
+            onClick={() => navigate(transportadorPath(["frota", "veiculos", row.id]))}
             className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
           >
             Ver
           </button>
           <button
-            onClick={() => navigate(`/dashboard/frota/veiculos/${row.id}/edit`)}
+            onClick={() => navigate(transportadorPath(["frota", "veiculos", row.id, "edit"]))}
             className="px-3 py-1 text-sm rounded bg-green-500 text-white hover:bg-green-600"
           >
             Editar
@@ -121,7 +122,7 @@ export default function ListPage(){
         </PageHeader>
         
         <button
-          onClick={() => navigate("/dashboard/frota/veiculos/create")}
+          onClick={() => navigate(transportadorPath(["frota", "veiculos", "create"]))}
           className="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
         >
           <span className="text-xl">+</span>

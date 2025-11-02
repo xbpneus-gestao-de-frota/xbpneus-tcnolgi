@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { 
+import {
   List,
   Plus,
   Link as LinkIcon,
@@ -10,6 +10,7 @@ import {
   Wrench
 } from 'lucide-react';
 import StatsCard from '../../../../components/common/StatsCard';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function VeiculosDashboard() {
   const modules = [
@@ -17,7 +18,7 @@ export default function VeiculosDashboard() {
       title: 'Lista de Veículos',
       description: 'Visualizar todos os veículos cadastrados',
       icon: List,
-      to: '/dashboard/frota-dashboard/veiculos/lista',
+      to: transportadorPath('frota/veiculos'),
       color: 'blue',
       stats: '45'
     },
@@ -25,21 +26,21 @@ export default function VeiculosDashboard() {
       title: 'Inserir Veículo',
       description: 'Cadastrar novo veículo na frota',
       icon: Plus,
-      to: '/dashboard/frota-dashboard/veiculos/inserir',
+      to: transportadorPath('frota/veiculos/create'),
       color: 'green'
     },
     {
       title: 'Adicionar Implemento',
       description: 'Vincular implementos aos veículos',
       icon: LinkIcon,
-      to: '/dashboard/frota-dashboard/veiculos/implemento',
+      to: transportadorPath('frota/implementos'),
       color: 'purple'
     },
     {
       title: 'Documentos',
       description: 'Gerenciar documentos dos veículos',
       icon: FileText,
-      to: '/dashboard/frota-dashboard/veiculos/documentos',
+      to: transportadorPath('frota/documentos'),
       color: 'orange'
     }
   ];
@@ -147,8 +148,8 @@ export default function VeiculosDashboard() {
       <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-white">Veículos Recentes</h3>
-          <Link 
-            to="/dashboard/frota-dashboard/veiculos/lista" 
+          <Link
+            to={transportadorPath('frota/veiculos')}
             className="text-blue-400 hover:text-blue-300 text-sm font-medium"
           >
             Ver todos →

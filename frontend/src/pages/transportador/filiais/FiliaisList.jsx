@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, MapPin, Edit, Trash2 } from 'lucide-react';
 import api from '../../../api/http';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function FiliaisList() {
   const [filiais, setFiliais] = useState([]);
@@ -96,7 +97,7 @@ export default function FiliaisList() {
           <p className="text-gray-600 mt-1">Gerencie as filiais das empresas</p>
         </div>
         <Link
-          to="/dashboard/filiais/create"
+          to={transportadorPath('filiais/create')}
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="w-5 h-5 mr-2" />
@@ -196,7 +197,7 @@ export default function FiliaisList() {
                   </td>
                   <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                     <Link
-                      to={`/dashboard/filiais/${filial.id}/edit`}
+                      to={transportadorPath(`filiais/${filial.id}/edit`)}
                       className="inline-flex items-center text-blue-600 hover:text-blue-900"
                     >
                       <Edit className="w-4 h-4" />

@@ -4,6 +4,7 @@ import { Save, X } from 'lucide-react';
 import api from "../../../api/http";
 import Loader from "../../../components/Loader";
 import PageHeader from "../../../components/PageHeader";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function EmpresaForm() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function EmpresaForm() {
         await api.post("/api/transportador/empresas/empresas/", formData);
         alert("Empresa criada com sucesso!");
       }
-      navigate("/dashboard/empresas");
+      navigate(transportadorPath("empresas"));
     } catch (error) {
       alert("Erro ao salvar empresa");
       console.error(error);

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../api/http';
 import PageHeader from '../../../components/PageHeader';
 import Loader from '../../../components/Loader';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 const OSDetail = () => {
   const { id } = useParams();
@@ -39,7 +40,7 @@ const OSDetail = () => {
           <div><strong>Prioridade:</strong> {os.prioridade}</div>
           <div className="col-span-2"><strong>Descrição:</strong> {os.descricao}</div>
         </div>
-        <button onClick={() => navigate('/dashboard/manutencao/ordens-servico')} 
+        <button onClick={() => navigate(transportadorPath(['manutencao', 'ordens-servico']))}
                 className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg">
           Voltar
         </button>

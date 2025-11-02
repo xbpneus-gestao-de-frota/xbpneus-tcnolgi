@@ -12,6 +12,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import StatsCard from '../../../components/common/StatsCard';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function PneusDashboard() {
   const modules = [
@@ -19,7 +20,7 @@ export default function PneusDashboard() {
       title: 'Lista de Pneus',
       description: 'Visualizar e gerenciar todos os pneus cadastrados',
       icon: List,
-      to: '/dashboard/pneus-dashboard/lista',
+      to: transportadorPath('pneus/lista'),
       color: 'blue',
       stats: '250'
     },
@@ -27,35 +28,35 @@ export default function PneusDashboard() {
       title: 'Cadastrar Pneu',
       description: 'Adicionar um novo pneu ao estoque',
       icon: Plus,
-      to: '/dashboard/pneus-dashboard/cadastrar',
+      to: transportadorPath('pneus/create'),
       color: 'green'
     },
     {
       title: 'Aplicações',
       description: 'Gerenciar a aplicação de pneus nos veículos',
       icon: Target,
-      to: '/dashboard/pneus-dashboard/aplicacoes',
+      to: transportadorPath('pneus/aplicacoes'),
       color: 'purple'
     },
     {
       title: 'Manutenção Pneus',
       description: 'Registrar e acompanhar manutenções específicas de pneus',
       icon: ClipboardList,
-      to: '/dashboard/pneus-dashboard/manutencao',
+      to: transportadorPath('pneus/manutencao-pneus'),
       color: 'orange'
     },
     {
       title: 'Análise de Desempenho',
       description: 'Analisar o desempenho e vida útil dos pneus',
       icon: BarChart2,
-      to: '/dashboard/pneus-dashboard/analise',
+      to: transportadorPath('pneus/analise-desgaste'),
       color: 'red'
     },
     {
       title: 'Garantias',
       description: 'Gerenciar garantias de pneus e recapagens',
       icon: ShieldCheck,
-      to: '/dashboard/pneus-dashboard/garantias',
+      to: transportadorPath('pneus/garantias'),
       color: 'indigo'
     }
   ];
@@ -165,8 +166,8 @@ export default function PneusDashboard() {
       <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-white">Pneus Recentes</h3>
-          <Link 
-            to="/dashboard/pneus-dashboard/lista" 
+          <Link
+            to={transportadorPath('pneus/lista')}
             className="text-blue-400 hover:text-blue-300 text-sm font-medium"
           >
             Ver todos →

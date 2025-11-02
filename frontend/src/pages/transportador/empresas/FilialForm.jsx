@@ -4,6 +4,7 @@ import useTryFetch from "../../../hooks/useTryFetch";
 import api from "../../../api/http";
 import Loader from "../../../components/Loader";
 import PageHeader from "../../../components/PageHeader";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function FilialForm() {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ export default function FilialForm() {
         await api.post("/api/transportador/empresas/filiais/", formData);
         alert("Filial criada com sucesso!");
       }
-      navigate("/dashboard/filiais");
+      navigate(transportadorPath("filiais"));
     } catch (error) {
       alert("Erro ao salvar filial");
       console.error(error);
@@ -330,7 +331,7 @@ export default function FilialForm() {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/dashboard/filiais")}
+            onClick={() => navigate(transportadorPath("filiais"))}
             className="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
           >
             Cancelar

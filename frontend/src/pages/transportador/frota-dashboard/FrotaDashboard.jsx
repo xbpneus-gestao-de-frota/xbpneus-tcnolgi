@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
-import { 
-  Truck, 
-  UserCheck, 
-  MapPin, 
+import {
+  Truck,
+  UserCheck,
+  MapPin,
   Navigation,
   TrendingUp,
   AlertTriangle,
   CheckCircle,
-  Layers
+  Layers,
+  Wrench
 } from 'lucide-react';
 import StatsCard from '../../../components/common/StatsCard';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function FrotaDashboard() {
   const modules = [
@@ -17,7 +19,7 @@ export default function FrotaDashboard() {
       title: 'Veículos',
       description: 'Cadastro e gerenciamento da frota de veículos',
       icon: Truck,
-      to: '/dashboard/frota-dashboard/veiculos',
+      to: transportadorPath('frota/veiculos'),
       color: 'blue',
       stats: '45'
     },
@@ -25,7 +27,7 @@ export default function FrotaDashboard() {
       title: 'Motoristas',
       description: 'Gestão de motoristas e habilitações',
       icon: UserCheck,
-      to: '/dashboard/frota-dashboard/motoristas',
+      to: transportadorPath('frota/motoristas'),
       color: 'green',
       stats: '78'
     },
@@ -33,7 +35,7 @@ export default function FrotaDashboard() {
       title: 'Posições',
       description: 'Gerenciamento das posições dos pneus nos veículos',
       icon: Layers,
-      to: '/dashboard/frota-dashboard/posicoes',
+      to: transportadorPath('frota/posicoes'),
       color: 'purple',
       stats: '180'
     },
@@ -41,7 +43,7 @@ export default function FrotaDashboard() {
       title: 'Rastreamento',
       description: 'Monitoramento e rastreamento em tempo real da frota',
       icon: Navigation,
-      to: '/dashboard/frota-dashboard/rastreamento',
+      to: transportadorPath('rastreamento/posicoes'),
       color: 'indigo',
       stats: '42'
     }
@@ -153,8 +155,8 @@ export default function FrotaDashboard() {
         <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-white">Veículos Recentes</h3>
-            <Link 
-              to="/dashboard/frota-dashboard/veiculos" 
+            <Link
+              to={transportadorPath('frota/veiculos')}
               className="text-blue-400 hover:text-blue-300 text-sm font-medium"
             >
               Ver todos →

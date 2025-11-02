@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function MotoristasDashboard() {
-  const items = [["Listar Motoristas", "/transportador/dashboard/motoristas/lista"], ["Cadastrar Motorista", "/transportador/dashboard/motoristas/novo"], ["Documentos", "/transportador/dashboard/motoristas/documentos"], ["CNH e Vencimentos", "/transportador/dashboard/motoristas/cnh"]];
+  const items = [
+    ["Listar Motoristas", transportadorPath("frota/motoristas/lista")],
+    ["Cadastrar Motorista", transportadorPath("frota/motoristas/novo")],
+    ["Documentos", transportadorPath("frota/motoristas/documentos")],
+    ["CNH e Vencimentos", transportadorPath("frota/motoristas/cnh")],
+  ];
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard — Motoristas</h1>

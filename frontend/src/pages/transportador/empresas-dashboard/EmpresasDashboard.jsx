@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Building2, MapPin, Users, FileText, Settings, BarChart3 } from 'lucide-react';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 function ModuleCard({ title, description, icon: Icon, to, color = "blue", stats }) {
   const colors = {
@@ -103,7 +104,7 @@ export default function EmpresasDashboard() {
             title="Empresas"
             description="Cadastro e gerenciamento de empresas do grupo"
             icon={Building2}
-            to="/dashboard/empresas-dashboard/empresas"
+            to={transportadorPath('empresas-dashboard/empresas')}
             color="blue"
             stats="5"
           />
@@ -111,7 +112,7 @@ export default function EmpresasDashboard() {
             title="Filiais"
             description="Gerenciar filiais e unidades operacionais"
             icon={MapPin}
-            to="/dashboard/empresas-dashboard/filiais"
+            to={transportadorPath('empresas-dashboard/filiais')}
             color="green"
             stats="12"
           />
@@ -119,7 +120,7 @@ export default function EmpresasDashboard() {
             title="Agregados"
             description="Cadastro e gestão de motoristas agregados"
             icon={Users}
-            to="/dashboard/empresas-dashboard/agregados"
+            to={transportadorPath('empresas-dashboard/agregados')}
             color="purple"
             stats="8"
           />
@@ -127,7 +128,7 @@ export default function EmpresasDashboard() {
             title="Documentos"
             description="Documentação e arquivos das empresas"
             icon={FileText}
-            to="/dashboard/empresas-dashboard/documentos"
+            to={transportadorPath('empresas-dashboard/documentos')}
             color="orange"
             stats="45"
           />
@@ -135,14 +136,14 @@ export default function EmpresasDashboard() {
             title="Relatórios"
             description="Relatórios e análises de desempenho"
             icon={BarChart3}
-            to="/dashboard/empresas-dashboard/relatorios"
+            to={transportadorPath('empresas-dashboard/relatorios')}
             color="indigo"
           />
           <ModuleCard
             title="Configurações"
             description="Configurações gerais do módulo"
             icon={Settings}
-            to="/dashboard/empresas-dashboard/configuracoes"
+            to={transportadorPath('empresas-dashboard/configuracoes')}
             color="blue"
           />
         </div>
