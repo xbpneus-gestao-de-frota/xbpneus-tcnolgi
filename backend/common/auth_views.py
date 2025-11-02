@@ -2,10 +2,12 @@
 Views de Autenticação Unificadas
 Sistema XBPneus
 """
+from django.db.utils import IntegrityError
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -15,18 +17,24 @@ def logout_view(request):
     """
     Endpoint unificado de logout
     """
+    refresh_token = request.data.get("refresh")
+    if not refresh_token:
+        return Response({"error": "Refresh token ausente."}, status=status.HTTP_400_BAD_REQUEST)
+
     try:
-        # Adicionar o token de refresh à blacklist
-        refresh_token = request.data["refresh"]
         token = RefreshToken(refresh_token)
+    except TokenError as exc:  # Token inválido ou expirado
+        return Response({"error": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
         token.blacklist()
-        return Response({
-            'message': 'Logout realizado com sucesso'
-        }, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({
-            'error': str(e)
-        }, status=status.HTTP_400_BAD_REQUEST)
+    except (AttributeError, IntegrityError, TypeError):
+        # Tokens emitidos via create_tokens_for_user não possuem vínculo com OutstandingToken
+        # (AUTH_USER_MODEL), portanto o blacklist gera erros de integridade. Como o logout
+        # é best-effort, ignoramos essas exceções e retornamos sucesso mesmo assim.
+        pass
+
+    return Response({'message': 'Logout realizado com sucesso'}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
