@@ -1,0 +1,19 @@
+﻿categoria,config_id,posicao_tipo,medida_exemplo,faixa_psi_min,faixa_psi_max,observacoes
+Caminhão/Trator,4x2,direcao,295/80R22.5,95,110,Faixa usual direção rodoviária leve–média.
+Caminhão/Trator,4x2,tracao,295/80R22.5,100,120,Rodado duplo; ajustar por carga/rota.
+Caminhão/Trator,6x2_tag_singelo,direcao,295/80R22.5,95,110,
+Caminhão/Trator,6x2_tag_singelo,tracao,295/80R22.5,100,120,
+Caminhão/Trator,6x2_tag_singelo,auxiliar,275/80R22.5,90,110,Singelo; eixo de apoio.
+Caminhão/Trator,6x2_tag_duplo,auxiliar,275/80R22.5,95,115,Duplo no tag; verificar carga legal.
+Caminhão/Trator,6x4,direcao,295/80R22.5,95,110,
+Caminhão/Trator,6x4,tracao,295/80R22.5,100,120,Eixos E2/E3 duplos.
+Caminhão Rígido,8x2_rigido,direcao,295/80R22.5,95,110,E1/E2 direção.
+Caminhão Rígido,8x2_rigido,tracao,295/80R22.5,100,120,E3 duplo.
+Caminhão Rígido,8x2_rigido,auxiliar,275/80R22.5,90,110,E4 singelo.
+Implemento (SR),SR2,sr,275/80R22.5,95,120,Duplo; conferir carga por eixo SR.
+Implemento (SR),SR3,sr,275/80R22.5,95,120,Duplo; conferir carga por eixo SR.
+Combinado,BITREM_7EIXOS_6x2,sr,275/80R22.5,95,120,Ajustar por distribuição de carga entre SR1 e SR2.
+Combinado,RODOTREM_9EIXOS_6x4,dolly,275/80R22.5,100,120,Dolly 2 eixos duplos.
+Ônibus,—,direcao,275/80R22.5,90,110,Urbano/rodoviário
+Ônibus,—,tracao,275/80R22.5,95,115,
+Vans,—,todos,215/75R16C,55,75,Verificar placa do veículo/pneu C.

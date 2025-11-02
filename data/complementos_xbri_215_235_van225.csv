@@ -1,0 +1,10 @@
+﻿marca,linha,modelo,medida,aro,PR,LI,SI,largura_banda_mm,largura_secao_mm,profundidade_sulco_mm,aplicacao,observacoes,fonte
+XBRI,Forza Block B2,Forza Block B2,215/75R17.5,17.5,,,,,,,Tração / Misto,"Medida não listada no catálogo oficial (linha aparece em 295/80R22.5 com 21,5 mm de sulco).",CATALOGO_XBRI_2_compressed.pdf (p. Forza Block)
+XBRI,Forza Block B2,Forza Block B2,235/75R17.5,17.5,,,,,,,Tração / Misto,"Medida não listada no catálogo oficial (linha aparece em 295/80R22.5 com 21,5 mm de sulco).",CATALOGO_XBRI_2_compressed.pdf (p. Forza Block)
+XBRI,Ecomix E2,Ecomix E2,215/75R17.5,17.5,16PR,135/133,J,,211.0,12.0,Misto / Curta distância,Largura é de seção (não banda).,CATALOGO_XBRI_TBR_CHINA_EN (Scribd)
+XBRI,Ecomix E2,Ecomix E2,215/75R17.5,17.5,18PR,135/133,J,,222.0,15.0,Misto / Curta distância,Largura é de seção (não banda).,CATALOGO_XBRI_TBR_CHINA_EN (Scribd)
+XBRI,Ecomix E2,Ecomix E2,235/75R17.5,17.5,18PR,143/141,J,,233.0,12.5,Misto / Curta distância,Varejistas também listam 16PR com os mesmos índices.,CATALOGO_XBRI_TBR_CHINA_EN (Scribd)
+XBRI,Mix Works F1,Mix Works F1,215/75R17.5,17.5,,,,,,,Misto / Fora de estrada,Medida não listada no catálogo; linha disponível em 22.5 para obras/pedreiras.,CATALOGO_XBRI_TBR_MALASIA_PT
+XBRI,Mix Works F1,Mix Works F1,235/75R17.5,17.5,,,,,,,Misto / Fora de estrada,Medida não listada no catálogo; linha disponível em 22.5 para obras/pedreiras.,CATALOGO_XBRI_TBR_MALASIA_PT
+XBRI,Forza Van E1 (sugestão para Van 225),Forza Van E1,225/75R16C,16,10PR,118/116,R,,,,Vans / Utilitários (Rodoviário),Linha de van da XBRI; Ecoplus P1 não é ofertado nesta medida de van.,Loja oficial XBRI (Forza Van E1 225/75R16C)
+XBRI,Ecoplus P1,Ecoplus P1,235/75R17.5,17.5,18PR,143/141,J,190.0,,12.0,Rodoviário (direcional/livre),Largura de banda e sulco conforme ficha de produto.,Autoamerica (Ecoplus P1 235/75R17.5)

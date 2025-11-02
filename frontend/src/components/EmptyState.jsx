@@ -1,0 +1,1 @@
+export default function EmptyState({ message = "Nenhum registro encontrado." }){ return <div className="p-4 text-sm opacity-60">{message}</div>; }

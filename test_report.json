@@ -1,0 +1,116 @@
+[
+  {
+    "timestamp": "2025-10-23 10:54:55",
+    "name": "Conex\u00e3o com Backend",
+    "status": "PASS",
+    "details": "Status: 404"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:55",
+    "name": "Conex\u00e3o com Frontend",
+    "status": "PASS",
+    "details": "Status: 200"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Schema OpenAPI",
+    "status": "PASS",
+    "details": "Documenta\u00e7\u00e3o acess\u00edvel"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Documenta\u00e7\u00e3o DRF",
+    "status": "PASS",
+    "details": "Documenta\u00e7\u00e3o acess\u00edvel"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Login",
+    "status": "FAIL",
+    "details": "Status: 400"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "M\u00f3dulo Transportador",
+    "status": "FAIL",
+    "details": "Autentica\u00e7\u00e3o necess\u00e1ria"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Endpoint: Aprova\u00e7\u00e3o de Usu\u00e1rios",
+    "status": "FAIL",
+    "details": "N\u00e3o encontrado (404)"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Endpoint: M\u00f3dulo Motorista (raiz)",
+    "status": "FAIL",
+    "details": "N\u00e3o encontrado (404)"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Endpoint: M\u00f3dulo Borracharia (raiz)",
+    "status": "FAIL",
+    "details": "N\u00e3o encontrado (404)"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Endpoint: M\u00f3dulo Revenda (raiz)",
+    "status": "FAIL",
+    "details": "N\u00e3o encontrado (404)"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Endpoint: M\u00f3dulo Recapagem (raiz)",
+    "status": "FAIL",
+    "details": "N\u00e3o encontrado (404)"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Endpoint: Relat\u00f3rios (raiz)",
+    "status": "FAIL",
+    "details": "N\u00e3o encontrado (404)"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Endpoint: Jobs (raiz)",
+    "status": "FAIL",
+    "details": "N\u00e3o encontrado (404)"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "P\u00e1gina: P\u00e1gina Inicial",
+    "status": "PASS",
+    "details": "Carregada com sucesso"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "P\u00e1gina: Login",
+    "status": "PASS",
+    "details": "Carregada com sucesso"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "P\u00e1gina: Cadastro",
+    "status": "PASS",
+    "details": "Carregada com sucesso"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "P\u00e1gina: P\u00f3s-Cadastro",
+    "status": "PASS",
+    "details": "Carregada com sucesso"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Erro 404 - Endpoint Inexistente",
+    "status": "PASS",
+    "details": "Retorna 404 corretamente"
+  },
+  {
+    "timestamp": "2025-10-23 10:54:58",
+    "name": "Erro 401 - Token Inv\u00e1lido",
+    "status": "PASS",
+    "details": "Retorna 401 corretamente"
+  }
+]

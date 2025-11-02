@@ -1,0 +1,5 @@
+XBPNEUS FULL build 2025-10-30T19:26:23.107044
+- Pacote consolidado backend + frontend.
+- Configurações REST/JWT/CORS presentes.
+- Módulos do Transportador e demais hubs conectados.
+- Scripts docker/local inclusos (start_system.sh, docker-compose.yml, render.yaml).

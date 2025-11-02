@@ -1,0 +1,20 @@
+XBPNEUS - Mudanças automáticas em 2025-10-30T15:24:27.262672
+
+1) settings.py (config/settings.py)
+   - INSTALLED_APPS: garantido 'rest_framework', 'corsheaders', 'rest_framework_simplejwt'.
+   - MIDDLEWARE: garantido 'corsheaders.middleware.CorsMiddleware'.
+   - Mantidos blocos existentes de CORS/CSRF/REST/JWT (nada duplicado).
+
+2) urls.py raiz (config/urls.py)
+   - Inclusões automáticas para apps com urls.py em /api/<app>/.
+   - Total de includes adicionados: 54.
+
+3) Padronização de labels
+   - Substituído 'Oficina' -> 'Borracharia' em arquivos de front/templates selecionados.
+
+4) Testes E2E (Playwright)
+   - Projeto em e2e/ com spec de navegação do menu lateral (ajuste `menuItems` se necessário).
+
+Observações
+   - Mudanças aplicadas de forma conservadora para evitar efeitos colaterais.
+   - Revise `config/urls.py` e a lista de `menuItems` para refletir os nomes finais.

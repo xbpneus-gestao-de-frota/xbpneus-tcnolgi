@@ -1,0 +1,23 @@
+﻿op_code,config_ids_recomendados,implementos_recomendados,eixos_tipicos,pbtc_faixa_aprox_t,observacoes
+ROD_BAU,4x2|6x2|6x4|SR3,Baú seco (SR3/LS),5–6,36–53,Longo curso/regional.
+ROD_SIDER,4x2|6x2|6x4|SR3,Sider (SR3/LS),5–6,36–53,Giro rápido de doca.
+ROD_GRAN,6x2|6x4|SR3|BITREM_7EIXOS_6x2|BITREM_7EIXOS_6x4,"Graneleiro, Bitrem graneleiro",6–7,45–57,Safras; atenção a PBTC.
+ROD_FRIGO,4x2|6x2|6x4|SR3,Baú frigorífico,5–6,36–53,Controle de temperatura.
+ROD_TAN_COMB,6x2|6x4|SR3,Tanque combustível,5–6,45–53,Normas ANTT.
+ROD_TAN_QUIM,6x2|6x4|SR3,Tanque químico,5–6,45–53,Compatibilidade química.
+ROD_TAN_ALIM,6x2|6x4|SR3,Tanque inox alimentício,5–6,45–53,Higienização.
+ROD_TAN_GLP,6x2|6x4|SR2/3,Tanque pressurizado,4–6,45–53,Pressurizado (GLP).
+ROD_PORT_CONT,4x2|6x2|6x4|SR3,Porta-contêiner,5–6,36–53,20/40/45 pés.
+ROD_CEGONHA,6x2|6x4,Cegonha,5–6,36–53,Altura/estabilidade.
+ROD_BOI,6x2|6x4|SR3,Boiadeiro,5–6,36–53,Carga viva.
+ROD_BEB,6x2|6x4|8x2_rigido,Carroceria bebidas,5–6,31–40,Distribuição urbana.
+ROD_SILO,6x2|6x4|SR3,Silo pneumático,5–6,36–53,Cimento/farinha.
+ROD_BASC,6x4|8x4_rigido|SR2/3,Basculante,5–6,31–53,Descarga por gravidade.
+ROD_PRANCHA,6x4|8x4_rigido,Prancha/Carrega-tudo,5–6,31–53,Cargas especiais.
+URB_COLETA,6x2|6x4|8x2_rigido,Poliguindaste/roll-on,4–5,26–31,Coleta urbana.
+URB_BETON,6x4,Betoneira,3,26–31,Tração 6x4 urbano.
+OFF_MINER,6x4|8x4_rigido|SR2/3,Gôndola/fora de estrada,5–6,>45,Operação severa.
+OFF_CANAV,RODOTREM_9EIXOS_6x2|RODOTREM_9EIXOS_6x4|TREMINHAO*,Rodotrem/Treminhão canavieiro,8–9+,>74,Estradas rurais; PBTC alto.
+OFF_FLORESTA,6x4|8x4_rigido|SR2/3,Florestal/cavaqueira,5–7,>45,Acesso florestal.
+OFF_CONST,6x4|8x4_rigido|SR2/3,Basculante reforçado,5–6,31–57,Obras; on/off.
+OFF_AGRO,6x2|6x4|SR3|BITREM_7EIXOS_6x4,Graneleiro rural/rodovia,6–7,45–57,Safra + acessos rurais.

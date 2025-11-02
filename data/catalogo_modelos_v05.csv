@@ -1,0 +1,27 @@
+﻿categoria,marca,familia_modelo,variante,ano_inicio,ano_fim,configuracoes,observacoes
+Caminhão/Trator,Volvo,FH,Gen1/Euro III–V,2000,2011,4x2|6x2|6x4,Transição FH12→FH13
+Caminhão/Trator,Volvo,FH,Gen2/Euro V–VI,2012,2025,4x2|6x2|6x4|(rig.)8x2/8x4,Plataforma atual
+Caminhão/Trator,Volvo,FM,Todas,2000,2025,4x2|6x2|6x4,Semipesado/pesado
+Caminhão Rígido,Volvo,VM,Todas,2003,2025,8x2_rigido|8x4_rigido,Distribuição
+Caminhão/Trator,Scania,P/G/R,Série 4/PRT,2000,2016,4x2|6x2|6x4,Pré-nova geração
+Caminhão/Trator,Scania,P/G/R/S,Nova Geração,2017,2025,4x2|6x2|6x4|(rig.)8x2/8x4,Cabines P/G/R/S
+Caminhão/Trator,Mercedes-Benz,Axor,Rodoviário,2005,2025,4x2|6x2|6x4,Pesado rodoviário
+Caminhão/Trator,Mercedes-Benz,Actros,Topo,2011,2025,4x2|6x2|6x4,Alta tecnologia
+Caminhão Rígido,Mercedes-Benz,Atego,Semipesado,2004,2025,4x2|6x2,Regional
+Caminhão/Trator,Volkswagen,Constellation,Família 13–33t,2005,2025,4x2|6x2|6x4,Linha ampla
+Caminhão/Trator,Volkswagen,Meteor,Pesado premium,2020,2025,4x2|6x2|6x4,Top VWCO
+Caminhão/Trator,Iveco,Stralis/Hi-Way/S-Way,Rodoviário,2007,2025,4x2|6x2|6x4,Pesado
+Caminhão Rígido,Iveco,Tector,Semipesado,2007,2025,4x2|6x2,Distribuição
+Caminhão/Trator,DAF,XF,Rodoviário,2013,2025,4x2|6x2|6x4,Ponta Grossa
+Caminhão/Trator,DAF,CF,Rodoviário,2013,2025,4x2|6x2|6x4,Ponta Grossa
+Caminhão/Trator,Ford,Cargo (BR),Linha nacional,2000,2019,4x2|6x2|6x4,Descontinuada BR 2019
+Ônibus (Chassi),Mercedes-Benz,O-500,RS/RSD/RSDD,2001,2025,4x2|6x2|8x2,Rodoviário
+Ônibus (Chassi),Mercedes-Benz,OF,OF-17xx,2000,2025,4x2,Urbano/interurbano
+Ônibus (Chassi),Volvo,B-Series,B270F/B340R/B450R/B510R,2009,2025,4x2|6x2,Urbano/rodoviário
+Ônibus (Chassi),Scania,K-Series,K230–K440,2006,2025,4x2|6x2|8x2,Rodoviário modular
+Ônibus (Chassi),Volkswagen,Volksbus,15/17/22–xxx,2003,2025,4x2|6x2,Urbano/rodoviário
+Vans,Mercedes-Benz,Sprinter,Gerações 1–3,2000,2025,SRW|DRW,Furgão/Chassi
+Vans,Renault,Master,Gerações 2–4,2002,2025,SRW|DRW,Furgão/Minibus
+Vans,Fiat,Ducato,Gerações 2–3,2001,2025,SRW|DRW,Stellantis
+Vans,Iveco,Daily,35/45/55/70,2000,2025,SRW|DRW,Chassi/Furgão
+Vans,Ford,Transit,Mercosul,2021,2025,SRW|DRW,Furgão/Minibus

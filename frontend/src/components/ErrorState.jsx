@@ -1,0 +1,1 @@
+export default function ErrorState({ message = "Erro ao carregar dados." }){ return <div className="p-4 text-sm text-red-400">{message}</div>; }

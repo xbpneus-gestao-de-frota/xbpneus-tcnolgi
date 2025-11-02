@@ -1,0 +1,6 @@
+pytest
+pytest-django
+pipdeptree
+pip-audit
+bandit
+ruff

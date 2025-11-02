@@ -1,0 +1,6 @@
+.tp-dash { padding: 24px; }
+.tp-dash__header { margin-bottom: 16px; }
+.tp-dash__grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 16px; }
+.tp-dash__tile { display: block; text-decoration: none; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; }
+.tp-dash__tile:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.tp-dash__tile-title { font-weight: 600; }

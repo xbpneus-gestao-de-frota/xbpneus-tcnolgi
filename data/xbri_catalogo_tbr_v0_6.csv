@@ -1,0 +1,12 @@
+﻿linha,modelo,medida,ply_rating,aro_recomendado,indice_carga,indice_velocidade,largura_banda_mm,largura_secao_mm,profundidade_sulco_mm,diametro_externo_mm,pressao_max_psi,fonte
+TBR,ECOPLUS,295/80R22.5,18PR,9.00,3550/3250,L,,,15.0,1050,131,https://xbri.com/products/detail/2
+TBR,ECOPLUS,315/80R22.5,18PR,9.00,3750/3450,M,,,15.5,1076,120,https://xbri.com/products/detail/2
+TBR,ECOWAY,275/80R22.5,16PR,8.25,3250/3000,M,,,14.0,1012,123,https://xbri.com/products/detail/4
+TBR,ECOWAY,295/80R22.5,18PR,8.25,3350/3075,M,,,15.0,1044,120,https://xbri.com/products/detail/4
+TBR,ROBUSTO,295/80R22.5,18PR,9.00,3550/3250,L,,,19.0,1050,131,https://xbri.com/products/detail/6
+TBR,ROBUSTO,315/80R22.5,18PR,9.00,3750/3450,M,,,20.0,1082,120,https://xbri.com/products/detail/6
+TBR,XCURVE,295/80R22.5,18PR,9.00,3550/3250,M,,,17.0,1044,130,https://xbri.com/products/detail/10
+TBR,XFORZA,295/80R22.5,18PR,9.00,3550/3250,L,,,23.0,1044,120,https://xbri.com/products/detail/11
+TBR,XFORZA P1,11R22.5,16PR,8.25,3150/2900,L,,279,21.5,1054,~123.3,https://arquivos.licitardigital.com.br/21753_1_5c93030347315f4f73a98331ca47bd36.pdf
+TBR,XFORZA P1,215/75R17.5,16PR,6,1700/1600,L,,211,15.1,767,~101.5,https://arquivos.licitardigital.com.br/21753_1_5c93030347315f4f73a98331ca47bd36.pdf
+TBR,XFORZA P1,235/75R17.5,18PR,6.75,2725/2575,J,,233,13.0,797,~126.9,https://arquivos.licitardigital.com.br/21753_1_5c93030347315f4f73a98331ca47bd36.pdf
