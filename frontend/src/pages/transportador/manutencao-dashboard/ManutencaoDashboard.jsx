@@ -6,9 +6,11 @@ import {
   AlertTriangle,
   CheckCircle,
   CalendarCheck,
-  Hourglass
+  Hourglass,
+  Settings
 } from 'lucide-react';
 import StatsCard from '../../../components/common/StatsCard';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function ManutencaoDashboard() {
   const modules = [
@@ -16,7 +18,7 @@ export default function ManutencaoDashboard() {
       title: 'Ordens de Serviço',
       description: 'Gerenciar todas as ordens de serviço abertas e concluídas',
       icon: Wrench,
-      to: '/dashboard/manutencao-dashboard/ordens-servico',
+      to: transportadorPath('manutencao/ordens-servico'),
       color: 'blue',
       stats: '15'
     },
@@ -24,21 +26,21 @@ export default function ManutencaoDashboard() {
       title: 'Testes Pós-Manutenção',
       description: 'Registrar e acompanhar testes realizados após manutenções',
       icon: CheckCircle,
-      to: '/dashboard/manutencao-dashboard/testes',
+      to: transportadorPath('manutencao/testes-pos-manutencao'),
       color: 'green'
     },
     {
       title: 'Relatórios',
       description: 'Gerar relatórios de manutenção e desempenho da frota',
       icon: ClipboardList,
-      to: '/dashboard/manutencao-dashboard/relatorios',
+      to: transportadorPath('relatorios/manutencao'),
       color: 'purple'
     },
     {
       title: 'Configurações',
       description: 'Configurar tipos de manutenção, checklists e alertas',
       icon: Settings,
-      to: '/dashboard/manutencao-dashboard/configuracoes',
+      to: transportadorPath('configuracoes/visao-geral'),
       color: 'orange'
     }
   ];
@@ -148,8 +150,8 @@ export default function ManutencaoDashboard() {
       <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-white">Últimas Ordens de Serviço</h3>
-          <Link 
-            to="/dashboard/manutencao-dashboard/ordens-servico" 
+          <Link
+            to={transportadorPath('manutencao/ordens-servico')}
             className="text-blue-400 hover:text-blue-300 text-sm font-medium"
           >
             Ver todas →

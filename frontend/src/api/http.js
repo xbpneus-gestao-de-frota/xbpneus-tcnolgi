@@ -1,14 +1,39 @@
 import axios from "axios";
 
-const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000" });
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const PUBLIC_ENDPOINTS = new Set([
+  "/api/token/",
+  "/api/token/refresh/",
+  "/api/users/register_full/",
+]);
+
+const api = axios.create({ baseURL: BASE_URL });
+
+function isPublicRequest(cfg) {
+  if (!cfg?.url) {
+    return false;
+  }
+
+  const referenceBase = cfg.baseURL || BASE_URL;
+
+  try {
+    const resolved = new URL(cfg.url, referenceBase);
+    const normalizedPath = resolved.pathname.endsWith("/")
+      ? resolved.pathname
+      : `${resolved.pathname}/`;
+    return PUBLIC_ENDPOINTS.has(normalizedPath);
+  } catch (error) {
+    console.warn("Não foi possível normalizar URL da requisição:", error);
+    return false;
+  }
+}
 
 api.interceptors.request.use((cfg) => {
-  // Não adicionar token em requisições de login e registro
-  const isAuthEndpoint = cfg.url && (cfg.url.includes('/login/') || cfg.url.includes('/register/'));
-  
-  if (!isAuthEndpoint) {
-    const t = localStorage.getItem("access_token");
-    if (t) cfg.headers.Authorization = `Bearer ${t}`;
+  if (!isPublicRequest(cfg)) {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      cfg.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return cfg;
 });
@@ -32,7 +57,7 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
     
-    if (!original || original._retry) {
+    if (!original || original._retry || original._skipAuthRefresh) {
       return Promise.reject(error);
     }
     
@@ -62,7 +87,11 @@ api.interceptors.response.use(
       }
       try {
         console.log("Tentando renovar token...");
-        const { data } = await axios.post((import.meta.env.VITE_API_URL || "http://localhost:8000") + "/api/token/refresh/", { refresh });
+        const { data } = await api.post(
+          "/api/token/refresh/",
+          { refresh },
+          { _skipAuthRefresh: true }
+        );
         const newAccess = data.access;
         localStorage.setItem("access_token", newAccess);
         api.defaults.headers.common.Authorization = `Bearer ${newAccess}`;

@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function FiliaisDashboard() {
-  const items = [["Filiais", "/transportador/dashboard/filiais"], ["Empresas", "/transportador/dashboard/empresas"]];
+  const items = [
+    ["Filiais", transportadorPath("filiais")],
+    ["Empresas", transportadorPath("empresas")],
+  ];
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard — Filiais</h1>

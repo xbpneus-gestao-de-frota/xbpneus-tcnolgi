@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X } from 'lucide-react';
 import api from '../../../api/http';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function FilialForm() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ export default function FilialForm() {
       } else {
         await api.post('/api/filiais/', formData);
       }
-      navigate('/dashboard/filiais');
+      navigate(transportadorPath('filiais'));
     } catch (err) {
       alert('Erro ao salvar filial');
       console.error(err);
@@ -326,7 +327,7 @@ export default function FilialForm() {
         <div className="flex justify-end space-x-3 pt-4 border-t">
           <button
             type="button"
-            onClick={() => navigate('/dashboard/filiais')}
+            onClick={() => navigate(transportadorPath('filiais'))}
             className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <X className="w-4 h-4 mr-2" />

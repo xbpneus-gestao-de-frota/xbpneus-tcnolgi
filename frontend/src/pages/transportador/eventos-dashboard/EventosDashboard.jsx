@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function EventosDashboard() {
-  const items = [["Eventos de Pneus", "/transportador/dashboard/eventos/pneus"], ["Eventos de Manutenção", "/transportador/dashboard/eventos/manutencao"], ["Alertas do Sistema", "/transportador/dashboard/eventos/alertas"], ["Logs", "/transportador/dashboard/eventos/logs"]];
+  const items = [
+    ["Eventos de Pneus", transportadorPath("eventos/pneus")],
+    ["Eventos de Manutenção", transportadorPath("eventos/manutencao")],
+    ["Alertas do Sistema", transportadorPath("eventos/alertas")],
+    ["Logs", transportadorPath("eventos/logs")],
+  ];
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard — Eventos</h1>

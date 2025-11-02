@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api/http";
 import AlertasWidget from "../../components/AlertasWidget";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 function Card({ title, value, gradient }) {
   return (
@@ -71,14 +72,14 @@ export default function IndexTransportador(){
             Comece cadastrando seu primeiro veículo para começar a economizar e ajudar o planeta! 🌍
           </p>
           <div className="flex gap-4 flex-wrap">
-            <Link 
-              to="/dashboard/frota/veiculos/create"
+            <Link
+              to={transportadorPath("frota/veiculos/create")}
               className="px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition shadow-md"
             >
               ➕ Cadastrar Primeiro Veículo
             </Link>
-            <Link 
-              to="/dashboard/pneus/create"
+            <Link
+              to={transportadorPath("pneus/create")}
               className="px-6 py-3 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-800 transition shadow-md"
             >
               🛞 Cadastrar Primeiro Pneu

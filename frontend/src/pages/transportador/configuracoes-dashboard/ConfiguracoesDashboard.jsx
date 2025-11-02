@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function ConfiguracoesDashboard() {
-  const items = [["Usuários", "/transportador/dashboard/configuracoes/usuarios"], ["Perfis & Permissões", "/transportador/dashboard/configuracoes/perfis"], ["Integrações", "/transportador/dashboard/configuracoes/integracoes"], ["Notificações", "/transportador/dashboard/configuracoes/notificacoes"]];
+  const items = [
+    ["Usuários", transportadorPath("configuracoes/usuarios")],
+    ["Perfis & Permissões", transportadorPath("configuracoes/perfis")],
+    ["Integrações", transportadorPath("configuracoes/integracoes")],
+    ["Notificações", transportadorPath("configuracoes/notificacoes")],
+  ];
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard — Configurações</h1>

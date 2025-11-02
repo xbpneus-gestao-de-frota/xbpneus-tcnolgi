@@ -1,37 +1,15 @@
 import { NavLink } from "react-router-dom";
-import { 
-  Home, 
-  Truck, 
-  Circle, 
-  Package, 
-  Wrench, 
-  Brain, 
-  DollarSign, 
-  ShoppingCart, 
-  Calendar, 
-  FileText, 
-  Settings,
-  Building2,
-  MapPin
-} from 'lucide-react';
-
-const items = [
-  { to: "/transportador/dashboard", label: "Início", icon: Home },
-  { to: "/transportador/dashboard/frota", label: "Frota", icon: Truck },
-  { to: "/transportador/dashboard/pneus", label: "Pneus", icon: Circle },
-  { to: "/transportador/dashboard/estoque", label: "Estoque", icon: Package },
-  { to: "/transportador/dashboard/manutencao", label: "Manutenção", icon: Wrench },
-  { to: "/transportador/dashboard/ia", label: "IA - Análise", icon: Brain, highlight: true },
-  { to: "/transportador/dashboard/financeiro", label: "Financeiro", icon: DollarSign },
-  { to: "/transportador/dashboard/compras", label: "Compras", icon: ShoppingCart },
-  { to: "/transportador/dashboard/eventos", label: "Eventos", icon: Calendar },
-  { to: "/transportador/dashboard/relatorios", label: "Relatórios", icon: FileText },
-  { to: "/transportador/dashboard/configuracoes", label: "Configurações", icon: Settings },
-  { to: "/transportador/dashboard/empresas", label: "Empresas", icon: Building2 },
-  { to: "/transportador/dashboard/filiais", label: "Filiais", icon: MapPin },
-];
+import { TRANSPORTADOR_MENU_ROUTES } from "@/config/transportadorNavigation";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function Sidebar() {
+  const items = TRANSPORTADOR_MENU_ROUTES.map(({ path, label, icon, highlight, index }) => ({
+    to: index ? transportadorPath() : transportadorPath(path),
+    label,
+    Icon: icon,
+    highlight: Boolean(highlight),
+  }));
+
   return (
     <aside className="w-60 shrink-0 bg-[#1A237E] text-white shadow-lg">
       {/* Logo com degradê */}
@@ -51,7 +29,7 @@ export default function Sidebar() {
       {/* Menu de navegação */}
       <nav className="p-2 space-y-1">
         {items.map(it => {
-          const Icon = it.icon;
+          const Icon = it.Icon;
           return (
             <NavLink 
               key={it.to} 

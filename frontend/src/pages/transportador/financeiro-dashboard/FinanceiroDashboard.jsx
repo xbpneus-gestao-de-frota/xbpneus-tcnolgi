@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function FinanceiroDashboard() {
-  const items = [["Contas a Pagar", "/transportador/dashboard/financeiro/pagar"], ["Contas a Receber", "/transportador/dashboard/financeiro/receber"], ["Fluxo de Caixa", "/transportador/dashboard/financeiro/fluxo"], ["Centro de Custos", "/transportador/dashboard/financeiro/centros"]];
+  const items = [
+    ["Contas a Pagar", transportadorPath("financeiro/pagar")],
+    ["Contas a Receber", transportadorPath("financeiro/receber")],
+    ["Fluxo de Caixa", transportadorPath("financeiro/fluxo")],
+    ["Centro de Custos", transportadorPath("financeiro/centros")],
+  ];
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard — Financeiro</h1>

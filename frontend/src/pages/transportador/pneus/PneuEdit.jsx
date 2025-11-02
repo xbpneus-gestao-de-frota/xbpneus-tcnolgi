@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../api/http";
 import PageHeader from "../../../components/PageHeader";
+import { transportadorPath } from "@/config/transportadorPaths";
 import Loader from "../../../components/Loader";
 import ErrorState from "../../../components/ErrorState";
 
@@ -70,7 +71,7 @@ export default function PneuEdit() {
         data_aquisicao: form.data_aquisicao || null, observacoes: form.observacoes || null
       };
       await api.put(`/api/transportador/pneus/pneus/${id}/`, payload);
-      navigate("/dashboard/pneus/lista");
+      navigate(transportadorPath(["pneus", "lista"]));
     } catch (ex) {
       setSaveError("Falha ao atualizar pneu.");
     } finally {
@@ -128,7 +129,7 @@ export default function PneuEdit() {
           <div className="flex items-center gap-3 pt-4 border-t">
             <button type="submit" disabled={saving} className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
               {saving ? "Salvando..." : "Salvar Alterações"}</button>
-            <button type="button" onClick={() => navigate("/dashboard/pneus/lista")} className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
+            <button type="button" onClick={() => navigate(transportadorPath(["pneus", "lista"]))} className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
           </div>
         </form>
       </div>

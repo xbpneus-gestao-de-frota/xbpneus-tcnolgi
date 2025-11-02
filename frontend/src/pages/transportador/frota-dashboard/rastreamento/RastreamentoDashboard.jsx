@@ -9,6 +9,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import StatsCard from '../../../../components/common/StatsCard';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function RastreamentoDashboard() {
   const modules = [
@@ -16,28 +17,28 @@ export default function RastreamentoDashboard() {
       title: 'Monitoramento Ao Vivo',
       description: 'Visualize a localização em tempo real da sua frota',
       icon: MapPin,
-      to: '/dashboard/frota-dashboard/rastreamento/monitoramento',
+      to: transportadorPath('rastreamento/posicoes'),
       color: 'blue',
     },
     {
       title: 'Histórico de Rotas',
       description: 'Acompanhe o trajeto percorrido pelos veículos',
       icon: History,
-      to: '/dashboard/frota-dashboard/rastreamento/historico',
+      to: transportadorPath('rastreamento/historico'),
       color: 'green',
     },
     {
       title: 'Veículos Rastreáveis',
       description: 'Gerencie quais veículos estão sendo rastreados',
       icon: Truck,
-      to: '/dashboard/frota-dashboard/rastreamento/veiculos',
+      to: transportadorPath('frota/veiculos'),
       color: 'purple',
     },
     {
       title: 'Configurações',
       description: 'Ajuste as configurações de rastreamento e alertas',
       icon: Settings,
-      to: '/dashboard/frota-dashboard/rastreamento/configuracoes',
+      to: transportadorPath('configuracoes/visao-geral'),
       color: 'orange',
     },
   ];
@@ -140,8 +141,8 @@ export default function RastreamentoDashboard() {
       <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-white">Eventos Recentes</h3>
-          <Link 
-            to="/dashboard/frota-dashboard/rastreamento/historico" 
+          <Link
+            to={transportadorPath('rastreamento/historico')}
             className="text-blue-400 hover:text-blue-300 text-sm font-medium"
           >
             Ver todos →

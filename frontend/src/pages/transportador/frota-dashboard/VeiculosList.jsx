@@ -5,6 +5,7 @@ import FormModal from '../../../components/common/FormModal';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
 import StatusBadge from '../../../components/common/StatusBadge';
 import SearchBar from '../../../components/common/SearchBar';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function VeiculosList() {
   const [veiculos, setVeiculos] = useState([]);
@@ -219,7 +220,7 @@ export default function VeiculosList() {
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <Link
-                          to={`/dashboard/frota/veiculos/${veiculo.id}`}
+                          to={transportadorPath(['frota', 'veiculos', veiculo.id])}
                           className="p-2 hover:bg-green-500/20 rounded-lg transition text-green-400"
                           title="Visualizar"
                         >

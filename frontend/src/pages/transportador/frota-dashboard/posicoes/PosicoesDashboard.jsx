@@ -9,6 +9,7 @@ import {
   Truck
 } from 'lucide-react';
 import StatsCard from '../../../../components/common/StatsCard';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 export default function PosicoesDashboard() {
   const modules = [
@@ -16,7 +17,7 @@ export default function PosicoesDashboard() {
       title: 'Lista de Posições',
       description: 'Visualizar e gerenciar todas as posições de pneus',
       icon: List,
-      to: '/dashboard/frota-dashboard/posicoes/lista',
+      to: transportadorPath('frota/posicoes'),
       color: 'blue',
       stats: '180'
     },
@@ -24,14 +25,14 @@ export default function PosicoesDashboard() {
       title: 'Gerenciar Posições',
       description: 'Atribuir e desatribuir pneus às posições dos veículos',
       icon: Layers,
-      to: '/dashboard/frota-dashboard/posicoes/gerenciar',
+      to: transportadorPath('frota/posicoes'),
       color: 'green'
     },
     {
       title: 'Configurações',
       description: 'Configurar tipos de posições e veículos',
       icon: Settings,
-      to: '/dashboard/frota-dashboard/posicoes/configuracoes',
+      to: transportadorPath('configuracoes/visao-geral'),
       color: 'purple'
     }
   ];
@@ -139,8 +140,8 @@ export default function PosicoesDashboard() {
       <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-white">Posições Recentes</h3>
-          <Link 
-            to="/dashboard/frota-dashboard/posicoes/lista" 
+          <Link
+            to={transportadorPath('frota/posicoes')}
             className="text-blue-400 hover:text-blue-300 text-sm font-medium"
           >
             Ver todas →

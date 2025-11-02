@@ -6,6 +6,7 @@ import Loader from "../../../components/Loader";
 import ErrorState from "../../../components/ErrorState";
 import PageHeader from "../../../components/PageHeader";
 import api from "../../../api/http";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 const CANDIDATES = ["/api/transportador/manutencao/ordens/"];
 
@@ -31,8 +32,8 @@ export default function OSList(){
       "label": "Ações",
       "render": (row) => (
         <div className="flex gap-2">
-          <button onClick={() => navigate(`/dashboard/manutencao/os/${row.id}`)} className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600">Ver</button>
-          <button onClick={() => navigate(`/dashboard/manutencao/os/${row.id}/edit`)} className="px-3 py-1 text-sm rounded bg-green-500 text-white hover:bg-green-600">Editar</button>
+          <button onClick={() => navigate(transportadorPath(["manutencao", "ordens-servico", row.id]))} className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600">Ver</button>
+          <button onClick={() => navigate(transportadorPath(["manutencao", "ordens-servico", row.id, "edit"]))} className="px-3 py-1 text-sm rounded bg-green-500 text-white hover:bg-green-600">Editar</button>
         </div>
       )
     }
@@ -42,7 +43,7 @@ export default function OSList(){
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <PageHeader title="Ordens de Serviço" subtitle="Gestão de manutenções" />
-        <button onClick={() => navigate("/dashboard/manutencao/os/create")} className="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 text-white font-medium hover:opacity-90 flex items-center gap-2">
+        <button onClick={() => navigate(transportadorPath(["manutencao", "ordens-servico", "create"]))} className="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 text-white font-medium hover:opacity-90 flex items-center gap-2">
           <span className="text-xl">+</span>Nova OS
         </button>
       </div>

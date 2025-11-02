@@ -4,6 +4,7 @@ sentry_sdk
 python-json-logger
 djangorestframework
 djangorestframework-simplejwt
+drf-spectacular
 Django>=5.0
 python-decouple
 requests

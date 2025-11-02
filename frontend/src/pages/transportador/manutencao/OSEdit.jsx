@@ -4,6 +4,7 @@ import api from '../../../api/http';
 import PageHeader from '../../../components/PageHeader';
 import Loader from '../../../components/Loader';
 import ErrorState from '../../../components/ErrorState';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 const OSEdit = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const OSEdit = () => {
 
     try {
       await api.post('/api/transportador/manutencao/ordens-servico/', formData);
-      navigate('/dashboard/manutencao/ordens-servico');
+      navigate(transportadorPath(['manutencao', 'ordens-servico']));
     } catch (err) {
       setError(err.response?.data?.message || 'Erro ao criar ordem de serviço');
     } finally {
@@ -195,7 +196,7 @@ const OSEdit = () => {
           <div className="flex gap-4 justify-end pt-4">
             <button
               type="button"
-              onClick={() => navigate('/dashboard/manutencao/ordens-servico')}
+              onClick={() => navigate(transportadorPath(['manutencao', 'ordens-servico']))}
               className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Cancelar

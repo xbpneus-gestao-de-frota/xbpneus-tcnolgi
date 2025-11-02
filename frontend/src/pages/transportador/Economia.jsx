@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/http';
 import PageHeader from '../../components/PageHeader';
+import { transportadorPath } from '@/config/transportadorPaths';
 
 const Economia = () => {
   const [dados, setDados] = useState(null);
@@ -130,11 +131,11 @@ const Economia = () => {
             Continue usando o XBPneus para economizar dinheiro e ajudar o planeta.
           </p>
           <div className="flex gap-4 justify-center">
-            <a href="/dashboard/pneus/lista" 
+            <a href={transportadorPath('pneus/lista')}
                className="px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100">
               Gerenciar Pneus
             </a>
-            <a href="/dashboard/manutencao/ordens-servico" 
+            <a href={transportadorPath('manutencao/ordens-servico')}
                className="px-6 py-3 bg-white/20 border-2 border-white text-white rounded-lg font-semibold hover:bg-white/30">
               Criar Manutenção
             </a>

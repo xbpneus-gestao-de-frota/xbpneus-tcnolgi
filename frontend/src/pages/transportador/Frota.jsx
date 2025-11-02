@@ -4,6 +4,7 @@ import DataTable from "../../components/DataTable";
 import Loader from "../../components/Loader";
 import ErrorState from "../../components/ErrorState";
 import useTryFetch from "../../hooks/useTryFetch";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function Frota() {
   // KPIs (contagens rápidas via DRF: usar page_size=1 para pegar meta.count)
@@ -73,28 +74,28 @@ export default function Frota() {
         <>
           {/* KPIs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {kpi("Total de Veículos", totalVeiculos, "/transportador/dashboard/frota/veiculos")}
-            {kpi("Posições Mapeadas", totalPosicoes, "/transportador/dashboard/frota/posicoes")}
+            {kpi("Total de Veículos", totalVeiculos, transportadorPath("frota/veiculos"))}
+            {kpi("Posições Mapeadas", totalPosicoes, transportadorPath("frota/posicoes"))}
             {totalImplementos > 0 &&
-              kpi("Implementos", totalImplementos, "/transportador/dashboard/frota/implementos")}
+              kpi("Implementos", totalImplementos, transportadorPath("frota/implementos"))}
           </div>
 
           {/* Ações rápidas */}
           <div className="flex flex-wrap gap-3 mb-8">
             <Link
-              to="/transportador/dashboard/frota/veiculos/create"
+              to={transportadorPath("frota/veiculos/create")}
               className="px-5 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
             >
               ➕ Novo Veículo
             </Link>
             <Link
-              to="/transportador/dashboard/frota/posicoes"
+              to={transportadorPath("frota/posicoes")}
               className="px-5 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
             >
               🗺️ Mapa de Posições
             </Link>
             <Link
-              to="/transportador/dashboard/frota/motoristas"
+              to={transportadorPath("frota/motoristas")}
               className="px-5 py-3 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
             >
               👤 Motoristas
@@ -106,7 +107,7 @@ export default function Frota() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Veículos Recentes</h3>
               <Link
-                to="/transportador/dashboard/frota/veiculos"
+                to={transportadorPath("frota/veiculos")}
                 className="text-sm text-blue-600 hover:underline"
               >
                 Ver todos →

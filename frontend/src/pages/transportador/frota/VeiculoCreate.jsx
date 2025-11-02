@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../api/http";
 import PageHeader from "../../../components/PageHeader";
 import Button from "../../../components/ui/Button";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 export default function VeiculoCreate() {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ export default function VeiculoCreate() {
       };
 
       await api.post("/api/transportador/frota/veiculos/", payload);
-      navigate("/dashboard/frota/veiculos");
+      navigate(transportadorPath(["frota", "veiculos"]));
     } catch (ex) {
       console.error("Erro ao criar veículo:", ex);
       setError(ex.response?.data?.detail || "Falha ao criar veículo. Verifique os dados e tente novamente.");
@@ -416,7 +417,7 @@ export default function VeiculoCreate() {
             <Button 
               type="button" 
               variant="secondary"
-              onClick={() => navigate("/dashboard/frota/veiculos")}
+              onClick={() => navigate(transportadorPath(["frota", "veiculos"]))}
               disabled={saving}
             >
               Cancelar

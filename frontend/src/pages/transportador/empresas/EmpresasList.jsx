@@ -8,6 +8,7 @@ import ErrorState from "../../../components/ErrorState";
 import EmptyState from "../../../components/EmptyState";
 import PageHeader from "../../../components/PageHeader";
 import api from "../../../api/http";
+import { transportadorPath } from "@/config/transportadorPaths";
 
 const CANDIDATES = ["/api/transportador/empresas/empresas/", "/api/empresas/"];
 
@@ -83,13 +84,13 @@ export default function EmpresasList() {
       render: (row) => (
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate(`/dashboard/empresas/${row.id}`)}
+            onClick={() => navigate(transportadorPath(["empresas", row.id]))}
             className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
           >
             Ver
           </button>
           <button
-            onClick={() => navigate(`/dashboard/empresas/${row.id}/edit`)}
+            onClick={() => navigate(transportadorPath(["empresas", row.id, "edit"]))}
             className="px-3 py-1 text-sm rounded bg-green-500 text-white hover:bg-green-600"
           >
             Editar
@@ -138,7 +139,7 @@ export default function EmpresasList() {
           )}
         </PageHeader>
         <button
-          onClick={() => navigate("/dashboard/empresas/new")}
+          onClick={() => navigate(transportadorPath(["empresas", "new"]))}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           + Nova Empresa
@@ -185,7 +186,7 @@ export default function EmpresasList() {
       {data && data.length === 0 ? (
         <EmptyState
           message="Nenhuma empresa encontrada"
-          action={() => navigate("/dashboard/empresas/new")}
+          action={() => navigate(transportadorPath(["empresas", "new"]))}
           actionLabel="Criar primeira empresa"
         />
       ) : (

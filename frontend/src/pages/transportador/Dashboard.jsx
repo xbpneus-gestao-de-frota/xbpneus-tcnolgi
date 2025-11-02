@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api/http";
+import { transportadorPath } from "@/config/transportadorPaths";
 import { 
   Truck, 
   Circle, 
@@ -192,56 +193,56 @@ export default function Dashboard() {
             title="Empresas"
             description="Gerenciar empresas, filiais e agregados"
             icon={Building2}
-            to="/dashboard/empresas-dashboard"
+            to={transportadorPath("empresas")}
             color="blue"
           />
             <QuickAction
               title="Frota"
               description="Gerenciar veículos, motoristas e rastreamento"
               icon={Truck}
-              to="/dashboard/frota-dashboard"
+              to={transportadorPath("frota")}
               color="cyan"
             />
             <QuickAction
               title="Pneus"
               description="Gerenciar o ciclo de vida dos pneus da frota"
               icon={Circle}
-              to="/dashboard/pneus-dashboard"
+              to={transportadorPath("pneus")}
               color="purple"
             />
             <QuickAction
               title="Estoque"
               description="Gerenciar movimentações e inventário do estoque"
               icon={Package}
-              to="/dashboard/estoque-dashboard"
+              to={transportadorPath("estoque")}
               color="orange"
             />
             <QuickAction
               title="Manutenção"
               description="Gerenciar ordens de serviço e testes pós-manutenção"
               icon={Wrench}
-              to="/dashboard/manutencao-dashboard"
+              to={transportadorPath("manutencao")}
               color="purple"
             />
           <QuickAction
             title="Adicionar Veículo"
             description="Cadastrar novo veículo na frota"
             icon={Truck}
-            to="/dashboard/frota/veiculos"
+            to={transportadorPath("frota/veiculos")}
             color="green"
           />
           <QuickAction
             title="Registrar Pneu"
             description="Adicionar pneu ao estoque"
             icon={Circle}
-            to="/dashboard/pneus/lista"
+            to={transportadorPath("pneus/lista")}
             color="purple"
           />
           <QuickAction
             title="Nova OS"
             description="Abrir ordem de serviço"
             icon={Wrench}
-            to="/dashboard/manutencao/os"
+            to={transportadorPath("manutencao/ordens-servico/create")}
             color="orange"
           />
         </div>
