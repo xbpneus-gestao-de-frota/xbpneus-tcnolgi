@@ -4,6 +4,7 @@ import django
 import pytest
 from django.test import TransactionTestCase
 from django.test.runner import DiscoverRunner
+from django.test.utils import teardown_test_environment
 
 
 # Garante que o Django está configurado para os testes
@@ -25,10 +26,24 @@ from backend.common.jwt_utils import create_tokens_for_user  # noqa: E402
 def django_test_environment(request):
     runner = DiscoverRunner(verbosity=0, interactive=False, keepdb=True)
     old_config = runner.setup_databases()
-    runner.setup_test_environment()
+    test_env_initialized = False
+    try:
+        runner.setup_test_environment()
+        test_env_initialized = True
+    except RuntimeError:
+        try:
+            teardown_test_environment()
+        except Exception:
+            pass
+        runner.setup_test_environment()
+        test_env_initialized = True
 
     def teardown():
-        runner.teardown_test_environment()
+        if test_env_initialized:
+            try:
+                runner.teardown_test_environment()
+            except AttributeError:
+                pass
         runner.teardown_databases(old_config)
 
     request.addfinalizer(teardown)

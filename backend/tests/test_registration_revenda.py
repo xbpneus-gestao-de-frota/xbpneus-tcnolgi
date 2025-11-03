@@ -10,6 +10,38 @@ from backend.revenda.models import UsuarioRevenda
 def api_client():
     return APIClient()
 
+
+def ensure_revenda_user(email, password, cnpj, **extra_fields):
+    user = UsuarioRevenda.objects.filter(cnpj=cnpj).first()
+    if user is None:
+        user = UsuarioRevenda.objects.filter(email=email).first()
+
+    if user:
+        updated_fields = []
+        if user.email != email:
+            user.email = email
+            updated_fields.append("email")
+        if user.cnpj != cnpj:
+            user.cnpj = cnpj
+            updated_fields.append("cnpj")
+        for field, value in extra_fields.items():
+            if getattr(user, field) != value:
+                setattr(user, field, value)
+                updated_fields.append(field)
+        if password and not user.check_password(password):
+            user.set_password(password)
+            updated_fields.append("password")
+        if updated_fields:
+            user.save(update_fields=list(dict.fromkeys(updated_fields)))
+        return user
+
+    return UsuarioRevenda.objects.create_user(
+        email=email,
+        password=password,
+        cnpj=cnpj,
+        **extra_fields,
+    )
+
 @pytest.mark.django_db
 def test_register_revenda_success(api_client):
     initial_user_count = UsuarioRevenda.objects.count()
@@ -19,7 +51,7 @@ def test_register_revenda_success(api_client):
         "email": "nova.revenda@teste.com",
         "password": "Senha@123",
         "nome_razao_social": "Nova Revenda Teste",
-        "cnpj": "55443322000199",
+        "cnpj": "44332211000166",
         "telefone": "(99) 99999-9999"
     }
     response = api_client.post("/api/users/register_full/", data, format="json")
@@ -32,11 +64,11 @@ def test_register_revenda_success(api_client):
     assert not new_revenda.is_active  # Deve estar inativo até aprovação
     assert not new_revenda.aprovado # Deve estar não aprovado até aprovação
     assert new_revenda.nome_razao_social == "Nova Revenda Teste"
-    assert new_revenda.cnpj == "55443322000199"
+    assert new_revenda.cnpj == "44332211000166"
 
 @pytest.mark.django_db
 def test_register_revenda_email_exists(api_client):
-    UsuarioRevenda.objects.create_user(
+    ensure_revenda_user(
         email="existente.revenda@teste.com",
         password="Senha@123",
         nome_razao_social="Revenda Existente",
@@ -77,7 +109,7 @@ def test_register_revenda_missing_fields(api_client):
 
 @pytest.mark.django_db
 def test_register_revenda_cnpj_exists(api_client):
-    UsuarioRevenda.objects.create_user(
+    ensure_revenda_user(
         email="revenda.cnpj@teste.com",
         password="Senha@123",
         nome_razao_social="Revenda CNPJ Existente",

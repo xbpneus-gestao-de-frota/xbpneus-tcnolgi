@@ -10,6 +10,39 @@ from backend.borracharia.models import UsuarioBorracharia
 def api_client():
     return APIClient()
 
+
+def ensure_borracharia_user(email, password, cnpj, **extra_fields):
+    user = UsuarioBorracharia.objects.filter(cnpj=cnpj).first()
+    if user is None:
+        user = UsuarioBorracharia.objects.filter(email=email).first()
+
+    if user:
+        updated_fields = []
+        if user.email != email:
+            user.email = email
+            updated_fields.append("email")
+        if user.cnpj != cnpj:
+            user.cnpj = cnpj
+            updated_fields.append("cnpj")
+        for field, value in extra_fields.items():
+            if getattr(user, field) != value:
+                setattr(user, field, value)
+                updated_fields.append(field)
+        if password and not user.check_password(password):
+            user.set_password(password)
+            updated_fields.append("password")
+        if updated_fields:
+            user.save(update_fields=list(dict.fromkeys(updated_fields)))
+        return user
+
+    return UsuarioBorracharia.objects.create_user(
+        email=email,
+        password=password,
+        cnpj=cnpj,
+        **extra_fields,
+    )
+
+
 @pytest.mark.django_db
 def test_register_borracharia_success(api_client):
     initial_user_count = UsuarioBorracharia.objects.count()
@@ -19,7 +52,7 @@ def test_register_borracharia_success(api_client):
         "email": "nova.borracharia@teste.com",
         "password": "Senha@123",
         "nome_razao_social": "Nova Borracharia Teste",
-        "cnpj": "11223344000155",
+        "cnpj": "44556677000188",
         "telefone": "(99) 99999-9999"
     }
     response = api_client.post("/api/users/register_full/", data, format="json")
@@ -32,11 +65,11 @@ def test_register_borracharia_success(api_client):
     assert not new_borracharia.is_active  # Deve estar inativo até aprovação
     assert not new_borracharia.aprovado # Deve estar não aprovado até aprovação
     assert new_borracharia.nome_razao_social == "Nova Borracharia Teste"
-    assert new_borracharia.cnpj == "11223344000155"
+    assert new_borracharia.cnpj == "44556677000188"
 
 @pytest.mark.django_db
 def test_register_borracharia_email_exists(api_client):
-    UsuarioBorracharia.objects.create_user(
+    ensure_borracharia_user(
         email="existente.borracharia@teste.com",
         password="Senha@123",
         nome_razao_social="Borracharia Existente",
@@ -77,7 +110,7 @@ def test_register_borracharia_missing_fields(api_client):
 
 @pytest.mark.django_db
 def test_register_borracharia_cnpj_exists(api_client):
-    UsuarioBorracharia.objects.create_user(
+    ensure_borracharia_user(
         email="borracharia.cnpj@teste.com",
         password="Senha@123",
         nome_razao_social="Borracharia CNPJ Existente",
