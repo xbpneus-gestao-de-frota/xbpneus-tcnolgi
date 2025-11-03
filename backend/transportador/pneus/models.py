@@ -137,12 +137,13 @@ class Tire(models.Model):
         if self.proxima_inspecao and self.proxima_inspecao <= timezone.now().date():
             return True
 
-        if (
-            self.profundidade_sulco is not None
-            and self.profundidade_sulco_minimo is not None
-            and self.profundidade_sulco <= self.profundidade_sulco_minimo
-        ):
-            return True
+        if self.profundidade_sulco is not None:
+            profundidade_minima = self.profundidade_sulco_minimo
+            if profundidade_minima is None:
+                profundidade_minima = Decimal("3")
+
+            if self.profundidade_sulco <= profundidade_minima:
+                return True
 
         return False
 

@@ -106,6 +106,17 @@ def test_tire_maintenance_inspection_fields(auth_client, setup_tire_dependencies
     assert response.data["precisa_inspecao"] == True
 
 @pytest.mark.django_db
+def test_precisa_inspecao_uses_default_threshold_when_minimum_unset():
+    tire = Tire.objects.create(
+        codigo="PNU0011",
+        medida="295/80R22.5",
+        profundidade_sulco=Decimal("2.5"),
+        profundidade_sulco_minimo=None,
+    )
+
+    assert tire.precisa_inspecao() is True
+
+@pytest.mark.django_db
 def test_application_creation(auth_client, setup_tire_dependencies):
     empresa, filial, vehicle = setup_tire_dependencies
     tire = Tire.objects.create(
