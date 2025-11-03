@@ -252,6 +252,9 @@ def collect_dashboard_payload(user) -> Tuple[Dict[str, Any], Dict[str, Any], Dic
         }
     )
 
+    company_vehicle_plates = veiculos.values_list("placa", flat=True)
+    work_orders_qs = WorkOrder.objects.filter(veiculo__in=company_vehicle_plates)
+
     metrics.update(
         {
             "vehicles": total_veiculos,
@@ -259,8 +262,8 @@ def collect_dashboard_payload(user) -> Tuple[Dict[str, Any], Dict[str, Any], Dic
             "tires": pneus_qs.count(),
             "applications": Application.objects.filter(empresa=empresa).count(),
             "stock_moves": StockMove.objects.filter(produto__empresa=empresa).count(),
-            "work_orders": WorkOrder.objects.count(),
-            "tests": Teste.objects.count(),
+            "work_orders": work_orders_qs.count(),
+            "tests": Teste.objects.filter(os_id__in=work_orders_qs.values_list("id", flat=True)).count(),
         }
     )
 
