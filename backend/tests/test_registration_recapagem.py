@@ -10,6 +10,38 @@ from backend.recapagem.models import UsuarioRecapagem
 def api_client():
     return APIClient()
 
+
+def ensure_recapagem_user(email, password, cnpj, **extra_fields):
+    user = UsuarioRecapagem.objects.filter(cnpj=cnpj).first()
+    if user is None:
+        user = UsuarioRecapagem.objects.filter(email=email).first()
+
+    if user:
+        updated_fields = []
+        if user.email != email:
+            user.email = email
+            updated_fields.append("email")
+        if user.cnpj != cnpj:
+            user.cnpj = cnpj
+            updated_fields.append("cnpj")
+        for field, value in extra_fields.items():
+            if getattr(user, field) != value:
+                setattr(user, field, value)
+                updated_fields.append(field)
+        if password and not user.check_password(password):
+            user.set_password(password)
+            updated_fields.append("password")
+        if updated_fields:
+            user.save(update_fields=list(dict.fromkeys(updated_fields)))
+        return user
+
+    return UsuarioRecapagem.objects.create_user(
+        email=email,
+        password=password,
+        cnpj=cnpj,
+        **extra_fields,
+    )
+
 @pytest.mark.django_db
 def test_register_recapagem_success(api_client):
     initial_user_count = UsuarioRecapagem.objects.count()
@@ -19,7 +51,7 @@ def test_register_recapagem_success(api_client):
         "email": "nova.recapagem@teste.com",
         "password": "Senha@123",
         "nome_razao_social": "Nova Recapagem Teste",
-        "cnpj": "66554433000188",
+        "cnpj": "88997766000133",
         "telefone": "(99) 99999-9999"
     }
     response = api_client.post("/api/users/register_full/", data, format="json")
@@ -32,11 +64,11 @@ def test_register_recapagem_success(api_client):
     assert not new_recapagem.is_active  # Deve estar inativo até aprovação
     assert not new_recapagem.aprovado # Deve estar não aprovado até aprovação
     assert new_recapagem.nome_razao_social == "Nova Recapagem Teste"
-    assert new_recapagem.cnpj == "66554433000188"
+    assert new_recapagem.cnpj == "88997766000133"
 
 @pytest.mark.django_db
 def test_register_recapagem_email_exists(api_client):
-    UsuarioRecapagem.objects.create_user(
+    ensure_recapagem_user(
         email="existente.recapagem@teste.com",
         password="Senha@123",
         nome_razao_social="Recapagem Existente",
@@ -77,7 +109,7 @@ def test_register_recapagem_missing_fields(api_client):
 
 @pytest.mark.django_db
 def test_register_recapagem_cnpj_exists(api_client):
-    UsuarioRecapagem.objects.create_user(
+    ensure_recapagem_user(
         email="recapagem.cnpj@teste.com",
         password="Senha@123",
         nome_razao_social="Recapagem CNPJ Existente",

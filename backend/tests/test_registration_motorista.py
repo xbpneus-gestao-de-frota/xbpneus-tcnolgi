@@ -10,6 +10,44 @@ from backend.motorista.models import UsuarioMotorista
 def api_client():
     return APIClient()
 
+
+def ensure_motorista_user(email, password, cpf, cnh, **extra_fields):
+    user = UsuarioMotorista.objects.filter(cpf=cpf).first()
+    if user is None:
+        user = UsuarioMotorista.objects.filter(cnh=cnh).first()
+    if user is None:
+        user = UsuarioMotorista.objects.filter(email=email).first()
+
+    if user:
+        updated_fields = []
+        if user.email != email:
+            user.email = email
+            updated_fields.append("email")
+        if user.cpf != cpf:
+            user.cpf = cpf
+            updated_fields.append("cpf")
+        if user.cnh != cnh:
+            user.cnh = cnh
+            updated_fields.append("cnh")
+        for field, value in extra_fields.items():
+            if getattr(user, field) != value:
+                setattr(user, field, value)
+                updated_fields.append(field)
+        if password and not user.check_password(password):
+            user.set_password(password)
+            updated_fields.append("password")
+        if updated_fields:
+            user.save(update_fields=list(dict.fromkeys(updated_fields)))
+        return user
+
+    return UsuarioMotorista.objects.create_user(
+        email=email,
+        password=password,
+        cpf=cpf,
+        cnh=cnh,
+        **extra_fields,
+    )
+
 @pytest.mark.django_db
 def test_register_motorista_success(api_client):
     initial_user_count = UsuarioMotorista.objects.count()
@@ -19,8 +57,8 @@ def test_register_motorista_success(api_client):
         "email": "novo.motorista@teste.com",
         "password": "Senha@123",
         "nome_completo": "Novo Motorista Teste",
-        "cpf": "11122233344",
-        "cnh": "12345678901",
+        "cpf": "32165498700",
+        "cnh": "78945612300",
         "categoria_cnh": "B",
         "telefone": "(99) 99999-9999"
     }
@@ -34,12 +72,12 @@ def test_register_motorista_success(api_client):
     assert not new_motorista.is_active  # Deve estar inativo até aprovação
     assert not new_motorista.aprovado # Deve estar não aprovado até aprovação
     assert new_motorista.nome_completo == "Novo Motorista Teste"
-    assert new_motorista.cpf == "11122233344"
-    assert new_motorista.cnh == "12345678901"
+    assert new_motorista.cpf == "32165498700"
+    assert new_motorista.cnh == "78945612300"
 
 @pytest.mark.django_db
 def test_register_motorista_email_exists(api_client):
-    UsuarioMotorista.objects.create_user(
+    ensure_motorista_user(
         email="existente.motorista@teste.com",
         password="Senha@123",
         nome_completo="Motorista Existente",
@@ -86,7 +124,7 @@ def test_register_motorista_missing_fields(api_client):
 
 @pytest.mark.django_db
 def test_register_motorista_cpf_exists(api_client):
-    UsuarioMotorista.objects.create_user(
+    ensure_motorista_user(
         email="motorista.cpf@teste.com",
         password="Senha@123",
         nome_completo="Motorista CPF Existente",
@@ -115,7 +153,7 @@ def test_register_motorista_cpf_exists(api_client):
 
 @pytest.mark.django_db
 def test_register_motorista_cnh_exists(api_client):
-    UsuarioMotorista.objects.create_user(
+    ensure_motorista_user(
         email="motorista.cnh@teste.com",
         password="Senha@123",
         nome_completo="Motorista CNH Existente",
