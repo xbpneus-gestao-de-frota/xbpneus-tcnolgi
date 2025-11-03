@@ -7,18 +7,21 @@ Módulo de Machine Learning para Previsão de Vida Útil e Análise Preditiva
 import sqlite3
 import json
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
-import os
+from pathlib import Path
+from typing import Dict, List, Optional
+
+from ..settings import IA_CONFIG
+from .criar_banco_dados import BancoDadosPneus
 
 class MachineLearningPneus:
     """
     Sistema de Machine Learning para análise preditiva de pneus
     """
     
-    def __init__(self, db_path: str = 'problemas_pneus.db'):
-        self.db_path = db_path
+    def __init__(self, db_path: Optional[str] = None):
+        self.db_path = self._resolve_db_path(db_path)
         self.conn = None
-        
+
         # Parâmetros do modelo (baseados em conhecimento técnico)
         self.params = {
             'vida_util_base_km': 80000,  # Vida útil base para pneu de carga
@@ -53,6 +56,42 @@ class MachineLearningPneus:
                 'sobrecarga_pesada': 0.6
             }
         }
+
+    def _resolve_db_path(self, db_path: Optional[str]) -> Path:
+        base_path = Path(IA_CONFIG.get('DATABASE_PATH'))
+        base_path.mkdir(parents=True, exist_ok=True)
+
+        if db_path:
+            candidate = Path(db_path)
+            if not candidate.is_absolute():
+                candidate = base_path / candidate
+        else:
+            candidate = base_path / 'problemas_pneus.db'
+
+        candidate.parent.mkdir(parents=True, exist_ok=True)
+        return candidate
+
+    def _ensure_connection(self) -> None:
+        if self.conn is not None:
+            return
+
+        if not self.db_path.exists():
+            banco = BancoDadosPneus(str(self.db_path))
+            banco.conectar()
+            try:
+                banco.criar_tabelas()
+                banco.popular_categorias()
+                banco.popular_problemas_banda_rodagem()
+                banco.popular_problemas_carcaca()
+                banco.popular_problemas_mecanicos_veiculo()
+                banco.popular_padroes_desgaste()
+                banco.popular_defeitos_fabricacao()
+                banco.popular_condicoes_ambientais()
+                banco.adicionar_fontes()
+            finally:
+                banco.fechar()
+
+        self.conn = sqlite3.connect(self.db_path)
     
     def prever_vida_util(self, dados_pneu: Dict) -> Dict:
         """
