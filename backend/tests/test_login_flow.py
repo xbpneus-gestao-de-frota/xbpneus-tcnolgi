@@ -3,16 +3,14 @@ import pytest
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 
-# O modelo de usuário principal é UsuarioTransportador, conforme AUTH_USER_MODEL
-User = get_user_model()
-
 @pytest.fixture
 def api_client():
     return APIClient()
 
 @pytest.fixture
 def approved_transportador_user(db):
-    user, created = User.objects.get_or_create(
+    user_model = get_user_model()
+    user, created = user_model.objects.get_or_create(
         email="aprovado.transportador@teste.com",
         defaults={
             "password": "Senha@123",
@@ -30,7 +28,8 @@ def approved_transportador_user(db):
 
 @pytest.fixture
 def unapproved_transportador_user(db):
-    user, created = User.objects.get_or_create(
+    user_model = get_user_model()
+    user, created = user_model.objects.get_or_create(
         email="naoaprovado.transportador@teste.com",
         defaults={
             "password": "Senha@123",

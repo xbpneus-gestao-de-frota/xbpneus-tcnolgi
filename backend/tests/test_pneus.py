@@ -3,13 +3,17 @@ import pytest
 from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from xbpneus.backend.transportador.pneus.models import Tire, Application, MovimentacaoPneu, MedicaoPneu
-from xbpneus.backend.transportador.frota.models import Vehicle, Position
-from xbpneus.backend.transportador.empresas.models import Empresa, Filial
-from xbpneus.backend.transportador.configuracoes.models import CatalogoModeloVeiculo, OperacaoConfiguracao
+from backend.transportador.pneus.models import (
+    DEFAULT_PROFUNDIDADE_SULCO_MINIMO,
+    Tire,
+    Application,
+    MovimentacaoPneu,
+    MedicaoPneu,
+)
+from backend.transportador.frota.models import Vehicle, Position
+from backend.transportador.empresas.models import Empresa, Filial
+from backend.transportador.configuracoes.models import CatalogoModeloVeiculo, OperacaoConfiguracao
 from decimal import Decimal
-
-User = get_user_model()
 
 @pytest.fixture
 def api_client():
@@ -18,7 +22,13 @@ def api_client():
 @pytest.fixture
 def create_user():
     def _create_user(email, password, is_staff=False, is_active=True):
-        return User.objects.create_user(email=email, password=password, is_staff=is_staff, is_active=is_active)
+        user_model = get_user_model()
+        return user_model.objects.create_user(
+            email=email,
+            password=password,
+            is_staff=is_staff,
+            is_active=is_active,
+        )
     return _create_user
 
 @pytest.fixture
@@ -100,6 +110,20 @@ def test_tire_maintenance_inspection_fields(auth_client, setup_tire_dependencies
     response = auth_client.get(url)
     assert response.status_code == 200, response.data
     assert response.data["precisa_inspecao"] == True
+
+@pytest.mark.django_db
+def test_precisa_inspecao_uses_default_threshold_when_minimum_unset():
+    tire = Tire.objects.create(
+        codigo="PNU0011",
+        medida="295/80R22.5",
+        profundidade_sulco=Decimal("2.5"),
+        profundidade_sulco_minimo=None,
+    )
+
+    assert tire.precisa_inspecao() is True
+
+    tire.profundidade_sulco = DEFAULT_PROFUNDIDADE_SULCO_MINIMO + Decimal("0.01")
+    assert tire.precisa_inspecao() is False
 
 @pytest.mark.django_db
 def test_application_creation(auth_client, setup_tire_dependencies):

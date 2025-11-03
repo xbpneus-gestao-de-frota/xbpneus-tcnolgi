@@ -1,6 +1,6 @@
-from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 from backend.borracharia.models import UsuarioBorracharia
@@ -22,7 +22,7 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
     default_error_messages = {
-        "no_active_account": _("No active account found with the given credentials"),
+        "no_active_account": "No active account found with the given credentials",
     }
 
     USER_MODEL_MAP = (
@@ -108,14 +108,32 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
     """Refresh serializer that supports users stored in multiple models."""
 
     default_error_messages = {
-        "no_active_account": _("No active account found with the given credentials"),
+        "no_active_account": "No active account found with the given credentials",
     }
 
     def validate(self, attrs):  # noqa: D401 - inherited docstring not needed
-        refresh = self.token_class(attrs["refresh"])
+        try:
+            refresh = self.token_class(attrs["refresh"])
+            if hasattr(refresh, "check_blacklist"):
+                refresh.check_blacklist()
+        except TokenError as exc:
+            message = str(exc)
+            detail = "Token is blacklisted" if "blacklisted" in message.lower() else self.default_error_messages["no_active_account"]
+            raise AuthenticationFailed(detail, code="token_not_valid") from exc
 
         user = get_user_from_token(refresh)
         if not user:
+            try:
+                from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+
+                jti = refresh.get("jti")
+                if jti:
+                    outstanding = OutstandingToken.objects.filter(jti=jti).first()
+                    if outstanding and BlacklistedToken.objects.filter(token=outstanding).exists():
+                        raise AuthenticationFailed("Token is blacklisted", code="token_not_valid")
+            except Exception:
+                pass
+
             raise AuthenticationFailed(
                 self.default_error_messages["no_active_account"],
                 code="no_active_account",
@@ -132,9 +150,5 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
 
         tokens = create_tokens_for_user(user)
 
-        # Rotation and blacklist lifecycles rely on OutstandingToken entries that
-        # are coupled to AUTH_USER_MODEL. Since our tokens are issued for multiple
-        # unrelated models we deliberately skip both features here to avoid
-        # foreign key errors and incorrect revocation bookkeeping.
         return {"access": tokens["access"]}
 

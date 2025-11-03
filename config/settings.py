@@ -1,7 +1,9 @@
+import importlib
 import os
-from pathlib import Path
-import dj_database_url
 from datetime import timedelta
+from pathlib import Path
+
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,6 +14,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 INSTALLED_APPS = [
     'backend.jobs',
     'backend.common',
+    'backend.transportador',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -22,12 +25,9 @@ INSTALLED_APPS = [
     'backend.transportador.empresas',
     'rest_framework',
     'corsheaders',
-    'drf_spectacular',
-    'drf_spectacular_sidecar',
     'rest_framework_simplejwt.token_blacklist',
     'health_check.db',
     'health_check.cache',
-    'django_rq',
     'axes',
     'backend.transportador.frota',
     'backend.transportador.pneus',
@@ -76,13 +76,36 @@ INSTALLED_APPS = [
     'backend.reports',
     'django.contrib.admindocs',
     'django.contrib.flatpages',
-    'django.contrib.gis',
     'django.contrib.humanize',
-    'django.contrib.postgres',
     'django.contrib.redirects',
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django.contrib.syndication',
+    'health_check.storage',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+]
+
+OPTIONAL_APPS = [
+    ('drf_spectacular', ()),
+    ('drf_spectacular_sidecar', ()),
+    ('django_rq', ()),
+    ('django.contrib.postgres', ('psycopg2', 'psycopg')),
+]
+
+INSTALLED_OPTIONAL_APPS = set()
+
+for optional_app, dependencies in OPTIONAL_APPS:
+    try:
+        for dependency in dependencies:
+            importlib.import_module(dependency)
+        importlib.import_module(optional_app)
+    except ImportError:
+        continue
+    INSTALLED_APPS.append(optional_app)
+    INSTALLED_OPTIONAL_APPS.add(optional_app)
+
+OPTIONAL_HEALTH_CHECK_APPS = [
     'health_check.contrib.celery',
     'health_check.contrib.celery_ping',
     'health_check.contrib.db_heartbeat',
@@ -93,15 +116,15 @@ INSTALLED_APPS = [
     'health_check.contrib.redis',
     'health_check.contrib.s3boto3_storage',
     'health_check.contrib.s3boto_storage',
-    'health_check.storage',
-    'rest_framework.authtoken',
-    'transportador_empresas',
-    'transportador_financeiro',
-    'transportador_motorista',
-    'transportador_relatorios',
-    'transportador_tr',
-    'rest_framework_simplejwt',
 ]
+
+if os.getenv('ENABLE_HEALTH_CHECK_OPTIONALS') == '1':
+    for optional_app in OPTIONAL_HEALTH_CHECK_APPS:
+        try:
+            importlib.import_module(f"{optional_app}.apps")
+        except ImportError:
+            continue
+        INSTALLED_APPS.append(optional_app)
 
 MIDDLEWARE = [
     'backend.common.metrics.MetricsMiddleware',
@@ -180,6 +203,14 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+SPECTACULAR_ENABLED = 'drf_spectacular' in INSTALLED_OPTIONAL_APPS
+
+DEFAULT_SCHEMA_CLASS = (
+    "drf_spectacular.openapi.AutoSchema"
+    if SPECTACULAR_ENABLED
+    else "rest_framework.schemas.openapi.AutoSchema"
+)
+
 REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "anon": os.environ.get("XBP_THROTTLE_ANON", "100/min"),
@@ -195,7 +226,7 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
         "rest_framework.filters.SearchFilter",
     ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": DEFAULT_SCHEMA_CLASS,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "backend.common.custom_auth.MultiModelJWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
@@ -205,7 +236,10 @@ REST_FRAMEWORK = {
     ],
 }
 
-SPECTACULAR_SETTINGS = {"TITLE": "XBPNEUS API", "VERSION": "v1"}
+if SPECTACULAR_ENABLED:
+    SPECTACULAR_SETTINGS = {"TITLE": "XBPNEUS API", "VERSION": "v1"}
+else:
+    SPECTACULAR_SETTINGS = {}
 
 # Redis Queue
 RQ_QUEUES = {

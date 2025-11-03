@@ -1,10 +1,16 @@
 import logging
+
 from django.conf import settings
 from django.contrib import admin
 from config import temp_user_creation_views, temp_migrate_views, temp_approval_views
 from django.http import JsonResponse, HttpResponse
 from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+try:
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+except ImportError:  # pragma: no cover - depende da instalação opcional
+    SpectacularAPIView = None
+    SpectacularSwaggerView = None
 from rest_framework_simplejwt.views import TokenVerifyView
 from backend.common.views import CustomTokenObtainPairView, CustomTokenRefreshView
 from backend.common.auth_views import logout_view, me_view
@@ -14,8 +20,6 @@ from importlib import import_module
 
 
 urlpatterns = [
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"),
     path("admin/", admin.site.urls),
     
     # Autenticação JWT
@@ -30,6 +34,12 @@ urlpatterns = [
     # Registro de usuários
     path("api/users/register_full/", register_full_view, name="users-register-full"),
 ]
+
+if SpectacularAPIView and SpectacularSwaggerView:
+    urlpatterns = [
+        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+        path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"),
+    ] + urlpatterns
 
 if settings.DEBUG:
     urlpatterns += [

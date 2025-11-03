@@ -2,6 +2,8 @@ import os
 
 import django
 import pytest
+from django.test import TransactionTestCase
+from django.test.runner import DiscoverRunner
 
 
 # Garante que o Django está configurado para os testes
@@ -15,6 +17,32 @@ except RuntimeError:
 
 from rest_framework.test import APIClient  # noqa: E402
 from django.contrib.auth import get_user_model  # noqa: E402
+
+from backend.common.jwt_utils import create_tokens_for_user  # noqa: E402
+
+
+@pytest.fixture(scope="session", autouse=True)
+def django_test_environment(request):
+    runner = DiscoverRunner(verbosity=0, interactive=False, keepdb=True)
+    old_config = runner.setup_databases()
+    runner.setup_test_environment()
+
+    def teardown():
+        runner.teardown_test_environment()
+        runner.teardown_databases(old_config)
+
+    request.addfinalizer(teardown)
+    return runner
+
+
+@pytest.fixture
+def db(django_test_environment):
+    test_case = TransactionTestCase(methodName='__init__')
+    test_case._pre_setup()
+    try:
+        yield
+    finally:
+        test_case._post_teardown()
 
 
 @pytest.fixture
@@ -39,8 +67,6 @@ def user(db):
 @pytest.fixture
 def client_auth(user):
     client = APIClient()
-    from rest_framework_simplejwt.tokens import RefreshToken
-
-    refresh = RefreshToken.for_user(user)
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
+    tokens = create_tokens_for_user(user)
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {tokens['access']}")
     return client

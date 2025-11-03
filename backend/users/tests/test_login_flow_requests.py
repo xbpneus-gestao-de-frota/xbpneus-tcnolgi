@@ -2,6 +2,9 @@ import requests
 import pytest
 import time
 
+
+pytestmark = pytest.mark.skip(reason="Requer backend externo publicado para execução.")
+
 BASE_URL = "https://xbpneus-backend.onrender.com"
 
 # Dados para os testes

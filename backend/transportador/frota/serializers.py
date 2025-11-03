@@ -4,26 +4,36 @@ import re
 
 class VehicleSerializer(serializers.ModelSerializer):
     """Serializer para veículos com validações de negócio"""
-    
+
     empresa_nome = serializers.CharField(source='empresa.nome', read_only=True)
     filial_nome = serializers.CharField(source='filial.nome', read_only=True)
     filial_codigo = serializers.CharField(source='filial.codigo', read_only=True)
-    
+
     modelo_veiculo_nome = serializers.CharField(source='modelo_veiculo.familia_modelo', read_only=True)
     modelo_veiculo_marca = serializers.CharField(source='modelo_veiculo.marca', read_only=True)
     configuracao_operacional_op_code = serializers.CharField(source='configuracao_operacional.op_code', read_only=True)
-    
+    precisa_manutencao = serializers.SerializerMethodField()
+    km_ate_manutencao = serializers.SerializerMethodField()
+
     class Meta:
         model = Vehicle
         fields = [
             "id", "empresa", "empresa_nome", "filial", "filial_nome", "filial_codigo",
             "placa", "modelo_veiculo", "modelo_veiculo_nome", "modelo_veiculo_marca",
             "ano_fabricacao", "ano_modelo", "tipo", "status", "km", "km_ultima_manutencao",
-            "km_proxima_manutencao", "motorista", "chassi", "renavam", "capacidade_carga",
+            "km_proxima_manutencao", "km_ate_manutencao", "precisa_manutencao",
+            "motorista", "chassi", "renavam", "capacidade_carga",
             "configuracao_operacional", "configuracao_operacional_op_code",
             "data_aquisicao", "data_venda", "observacoes", "criado_em", "atualizado_em"
         ]
-        read_only_fields = ['criado_em', 'atualizado_em']
+        read_only_fields = ['criado_em', 'atualizado_em', 'precisa_manutencao', 'km_ate_manutencao']
+
+    def get_precisa_manutencao(self, obj):
+        return bool(obj.precisa_manutencao())
+
+    def get_km_ate_manutencao(self, obj):
+        remaining = obj.km_ate_manutencao()
+        return remaining if remaining is not None else None
     
     def validate_placa(self, value):
         """

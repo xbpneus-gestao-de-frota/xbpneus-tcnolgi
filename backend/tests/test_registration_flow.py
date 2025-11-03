@@ -3,16 +3,14 @@ import pytest
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
 
-# O modelo de usuário principal é UsuarioTransportador, conforme AUTH_USER_MODEL
-User = get_user_model()
-
 @pytest.fixture
 def api_client():
     return APIClient()
 
 @pytest.mark.django_db
 def test_register_transportador_success(api_client):
-    initial_user_count = User.objects.count()
+    user_model = get_user_model()
+    initial_user_count = user_model.objects.count()
 
     data = {
         "tipo_usuario": "transportador", # Este campo pode ser ignorado se o registro for direto para UsuarioTransportador
@@ -27,9 +25,9 @@ def test_register_transportador_success(api_client):
 
     assert response.status_code == 201
     assert "Cadastro realizado com sucesso! Aguarde aprovação do administrador." in response.data["message"]
-    assert User.objects.count() == initial_user_count + 1
+    assert user_model.objects.count() == initial_user_count + 1
 
-    new_user = User.objects.get(email="novo.transportador@teste.com")
+    new_user = user_model.objects.get(email="novo.transportador@teste.com")
     assert not new_user.is_active  # Deve estar inativo até aprovação
     assert not new_user.aprovado # Deve estar não aprovado até aprovação
     assert new_user.nome_razao_social == "Novo Transportador Teste"
@@ -37,7 +35,8 @@ def test_register_transportador_success(api_client):
 
 @pytest.mark.django_db
 def test_register_transportador_email_exists(api_client):
-    User.objects.create_user(
+    user_model = get_user_model()
+    user_model.objects.create_user(
         email="existente.transportador@teste.com",
         password="Senha@123",
         nome_razao_social="Transportador Existente",
@@ -78,7 +77,8 @@ def test_register_transportador_missing_fields(api_client):
 
 @pytest.mark.django_db
 def test_register_transportador_cnpj_exists(api_client):
-    User.objects.create_user(
+    user_model = get_user_model()
+    user_model.objects.create_user(
         email="transportador.cnpj@teste.com",
         password="Senha@123",
         nome_razao_social="Transportador CNPJ Existente",

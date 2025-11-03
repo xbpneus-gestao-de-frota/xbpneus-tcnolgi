@@ -107,8 +107,8 @@ class Vehicle(models.Model):
     
     def km_ate_manutencao(self):
         """Calcula KM restante até próxima manutenção"""
-        if self.km_proxima_manutencao:
-            return max(0, self.km_proxima_manutencao - self.km)
+        if self.km_proxima_manutencao is not None:
+            return self.km_proxima_manutencao - self.km
         return None
 
 
