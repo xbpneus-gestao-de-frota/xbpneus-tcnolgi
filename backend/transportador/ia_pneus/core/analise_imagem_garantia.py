@@ -8,10 +8,14 @@ Integração com WhatsApp para recebimento de fotos
 import os
 import json
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+
 import openpyxl
 from openpyxl.styles import Font, Alignment, PatternFill
-from ia_analise_pneus import IAnalisePneus
+
+from ..settings import IA_CONFIG
+from .ia_analise_pneus import IAnalisePneus
 
 class AnalisadorImagemGarantia:
     """
@@ -19,14 +23,19 @@ class AnalisadorImagemGarantia:
     do formulário de garantia
     """
     
-    def __init__(self, template_path: str = None):
+    def __init__(self, template_path: Optional[str] = None):
         """
         Inicializa o analisador
         
         Args:
             template_path: Caminho para o template do formulário Excel
         """
-        self.template_path = template_path or '/home/ubuntu/upload/FORMULÁRIOPARAGARANTIA.xlsx'
+        default_template_dir = Path(IA_CONFIG.get('MODEL_PATH'))
+        default_template = default_template_dir / 'FORMULARIOPARAGARANTIA.xlsx'
+        if template_path:
+            self.template_path = Path(template_path)
+        else:
+            self.template_path = default_template
         self.ia = IAnalisePneus()
         
         # Mapeamento das seções do formulário

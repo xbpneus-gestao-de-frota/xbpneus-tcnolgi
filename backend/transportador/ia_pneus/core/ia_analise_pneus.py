@@ -8,27 +8,61 @@ Integração com XBPNEUS
 import sqlite3
 import json
 from datetime import datetime
+from pathlib import Path
 from typing import List, Dict, Optional, Tuple
-import os
+
+from ..settings import IA_CONFIG
+from .criar_banco_dados import BancoDadosPneus
 
 class IAnalisePneus:
     """
     Sistema de Inteligência Artificial para análise de problemas em pneus de carga
     """
     
-    def __init__(self, db_path='problemas_pneus.db'):
-        self.db_path = db_path
+    def __init__(self, db_path: Optional[str] = None):
+        self.db_path = self._resolve_db_path(db_path)
         self.conn = None
         self.cursor = None
         self.conectar_db()
-        
+
     def conectar_db(self):
         """Conecta ao banco de dados"""
-        if not os.path.exists(self.db_path):
-            raise FileNotFoundError(f"Banco de dados não encontrado: {self.db_path}")
+        if not self.db_path.exists():
+            self._seed_database()
+
         self.conn = sqlite3.connect(self.db_path)
         self.conn.row_factory = sqlite3.Row  # Permite acesso por nome de coluna
         self.cursor = self.conn.cursor()
+
+    def _resolve_db_path(self, db_path: Optional[str]) -> Path:
+        base_path = Path(IA_CONFIG.get('DATABASE_PATH'))
+        base_path.mkdir(parents=True, exist_ok=True)
+
+        if db_path:
+            candidate = Path(db_path)
+            if not candidate.is_absolute():
+                candidate = base_path / candidate
+        else:
+            candidate = base_path / 'problemas_pneus.db'
+
+        candidate.parent.mkdir(parents=True, exist_ok=True)
+        return candidate
+
+    def _seed_database(self):
+        banco = BancoDadosPneus(str(self.db_path))
+        banco.conectar()
+        try:
+            banco.criar_tabelas()
+            banco.popular_categorias()
+            banco.popular_problemas_banda_rodagem()
+            banco.popular_problemas_carcaca()
+            banco.popular_problemas_mecanicos_veiculo()
+            banco.popular_padroes_desgaste()
+            banco.popular_defeitos_fabricacao()
+            banco.popular_condicoes_ambientais()
+            banco.adicionar_fontes()
+        finally:
+            banco.fechar()
         
     def analisar_sintomas(self, sintomas: Dict) -> Dict:
         """

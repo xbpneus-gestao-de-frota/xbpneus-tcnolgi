@@ -4,12 +4,12 @@ from .models import AnaliseIA, Gamificacao, Garantia
 
 class AnaliseIASerializer(serializers.ModelSerializer):
     """Serializer para análises de IA"""
-    
+
     class Meta:
         model = AnaliseIA
-        fields = ['id', 'usuario', 'data_analise', 'tipo_analise', 'arquivo', 
+        fields = ['id', 'usuario', 'data_analise', 'tipo_analise', 'arquivo',
                   'resultado', 'precisao', 'tempo_processamento', 'status']
-        read_only_fields = ['id', 'data_analise', 'resultado', 'precisao', 
+        read_only_fields = ['id', 'usuario', 'data_analise', 'resultado', 'precisao',
                             'tempo_processamento', 'status']
 
 

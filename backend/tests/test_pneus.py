@@ -3,7 +3,13 @@ import pytest
 from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from backend.transportador.pneus.models import Tire, Application, MovimentacaoPneu, MedicaoPneu
+from backend.transportador.pneus.models import (
+    DEFAULT_PROFUNDIDADE_SULCO_MINIMO,
+    Tire,
+    Application,
+    MovimentacaoPneu,
+    MedicaoPneu,
+)
 from backend.transportador.frota.models import Vehicle, Position
 from backend.transportador.empresas.models import Empresa, Filial
 from backend.transportador.configuracoes.models import CatalogoModeloVeiculo, OperacaoConfiguracao
@@ -17,12 +23,32 @@ def api_client():
 def create_user():
     def _create_user(email, password, is_staff=False, is_active=True):
         user_model = get_user_model()
-        return user_model.objects.create_user(
-            email=email,
-            password=password,
-            is_staff=is_staff,
-            is_active=is_active,
-        )
+        user = user_model.objects.filter(email=email).first()
+
+        if user is None:
+            user = user_model.objects.create_user(
+                email=email,
+                password=password,
+                is_staff=is_staff,
+                is_active=is_active,
+                nome_razao_social="Usuário Teste",
+                telefone="",
+            )
+        else:
+            user.set_password(password)
+            fields_to_update = ["password"]
+
+            if user.is_staff != is_staff:
+                user.is_staff = is_staff
+                fields_to_update.append("is_staff")
+
+            if user.is_active != is_active:
+                user.is_active = is_active
+                fields_to_update.append("is_active")
+
+            user.save(update_fields=fields_to_update)
+
+        return user
     return _create_user
 
 @pytest.fixture
@@ -104,6 +130,40 @@ def test_tire_maintenance_inspection_fields(auth_client, setup_tire_dependencies
     response = auth_client.get(url)
     assert response.status_code == 200, response.data
     assert response.data["precisa_inspecao"] == True
+
+@pytest.mark.django_db
+def test_precisa_inspecao_uses_default_threshold_when_minimum_unset():
+    tire = Tire.objects.create(
+        codigo="PNU0011",
+        medida="295/80R22.5",
+        profundidade_sulco=Decimal("2.5"),
+        profundidade_sulco_minimo=None,
+    )
+
+    assert tire.precisa_inspecao() is True
+
+    tire.profundidade_sulco = DEFAULT_PROFUNDIDADE_SULCO_MINIMO + Decimal("0.01")
+    assert tire.precisa_inspecao() is False
+
+
+@pytest.mark.django_db
+def test_vida_util_percentual_uses_default_threshold_when_minimum_unset():
+    tire = Tire.objects.create(
+        codigo="PNU0012",
+        medida="295/80R22.5",
+        profundidade_sulco_novo=Decimal("12.0"),
+        profundidade_sulco=Decimal("9.0"),
+        profundidade_sulco_minimo=None,
+    )
+
+    expected_percentual = (
+        (
+            Decimal("9.0") - DEFAULT_PROFUNDIDADE_SULCO_MINIMO
+        )
+        / (Decimal("12.0") - DEFAULT_PROFUNDIDADE_SULCO_MINIMO)
+    ) * Decimal("100")
+
+    assert tire.vida_util_percentual() == pytest.approx(float(expected_percentual))
 
 @pytest.mark.django_db
 def test_application_creation(auth_client, setup_tire_dependencies):

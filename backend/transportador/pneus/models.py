@@ -4,6 +4,9 @@ from django.db import models
 from django.utils import timezone
 
 
+DEFAULT_PROFUNDIDADE_SULCO_MINIMO = Decimal("3.00")
+
+
 class Tire(models.Model):
     # Arquitetura Matriz-Filiais
     empresa = models.ForeignKey(
@@ -114,35 +117,41 @@ class Tire(models.Model):
     def __str__(self):
         return f"{self.codigo} - {self.medida}"
     
+    def _resolved_profundidade_sulco_minimo(self):
+        """Retorna o sulco mínimo configurado aplicando o fallback legado."""
+        if self.profundidade_sulco_minimo is not None:
+            return self.profundidade_sulco_minimo
+
+        return DEFAULT_PROFUNDIDADE_SULCO_MINIMO
+
     def vida_util_percentual(self):
         """Calcula percentual de vida útil baseado no sulco"""
         if (
             self.profundidade_sulco is None
             or self.profundidade_sulco_novo is None
-            or self.profundidade_sulco_minimo is None
         ):
             return None
 
-        intervalo_total = self.profundidade_sulco_novo - self.profundidade_sulco_minimo
+        profundidade_minima = self._resolved_profundidade_sulco_minimo()
+
+        intervalo_total = self.profundidade_sulco_novo - profundidade_minima
         if intervalo_total <= 0:
             return None
 
-        valor_atual = self.profundidade_sulco - self.profundidade_sulco_minimo
+        valor_atual = self.profundidade_sulco - profundidade_minima
         percentual = (valor_atual / intervalo_total) * Decimal("100")
         return float(max(Decimal("0"), min(Decimal("100"), percentual)))
-        return None
 
     def precisa_inspecao(self):
         """Verifica se pneu precisa de inspeção"""
         if self.proxima_inspecao and self.proxima_inspecao <= timezone.now().date():
             return True
 
-        if (
-            self.profundidade_sulco is not None
-            and self.profundidade_sulco_minimo is not None
-            and self.profundidade_sulco <= self.profundidade_sulco_minimo
-        ):
-            return True
+        if self.profundidade_sulco is not None:
+            profundidade_minima = self._resolved_profundidade_sulco_minimo()
+
+            if self.profundidade_sulco <= profundidade_minima:
+                return True
 
         return False
 
