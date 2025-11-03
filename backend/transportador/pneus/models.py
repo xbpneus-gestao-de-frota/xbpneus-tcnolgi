@@ -4,6 +4,9 @@ from django.db import models
 from django.utils import timezone
 
 
+DEFAULT_PROFUNDIDADE_SULCO_MINIMO = Decimal("3.00")
+
+
 class Tire(models.Model):
     # Arquitetura Matriz-Filiais
     empresa = models.ForeignKey(
@@ -140,7 +143,7 @@ class Tire(models.Model):
         if self.profundidade_sulco is not None:
             profundidade_minima = self.profundidade_sulco_minimo
             if profundidade_minima is None:
-                profundidade_minima = Decimal("3")
+                profundidade_minima = DEFAULT_PROFUNDIDADE_SULCO_MINIMO
 
             if self.profundidade_sulco <= profundidade_minima:
                 return True

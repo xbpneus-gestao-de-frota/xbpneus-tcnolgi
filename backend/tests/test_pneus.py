@@ -3,7 +3,13 @@ import pytest
 from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from backend.transportador.pneus.models import Tire, Application, MovimentacaoPneu, MedicaoPneu
+from backend.transportador.pneus.models import (
+    DEFAULT_PROFUNDIDADE_SULCO_MINIMO,
+    Tire,
+    Application,
+    MovimentacaoPneu,
+    MedicaoPneu,
+)
 from backend.transportador.frota.models import Vehicle, Position
 from backend.transportador.empresas.models import Empresa, Filial
 from backend.transportador.configuracoes.models import CatalogoModeloVeiculo, OperacaoConfiguracao
@@ -115,6 +121,9 @@ def test_precisa_inspecao_uses_default_threshold_when_minimum_unset():
     )
 
     assert tire.precisa_inspecao() is True
+
+    tire.profundidade_sulco = DEFAULT_PROFUNDIDADE_SULCO_MINIMO + Decimal("0.01")
+    assert tire.precisa_inspecao() is False
 
 @pytest.mark.django_db
 def test_application_creation(auth_client, setup_tire_dependencies):
