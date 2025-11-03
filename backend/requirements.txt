@@ -11,6 +11,7 @@ python-decouple
 requests
 openpyxl
 numpy
+Pillow
 whitenoise
 django-cors-headers
 django-redis
