@@ -1,6 +1,6 @@
 """
 Django management command para criar usuários de teste
-Uso: python manage.py criar_usuarios_teste
+Uso: python3.11 manage.py criar_usuarios_teste
 """
 
 from django.core.management.base import BaseCommand

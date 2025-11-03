@@ -12,7 +12,7 @@ curl -X POST http://localhost:8000/api/motorista/register/ \
     "email": "motorista.web@xbpneus.com",
     "password": "Senha123456",
     "password_confirm": "Senha123456"
-  }' | python3 -m json.tool
+  }' | python3.11 -m json.tool
 
 echo -e "\n=== Cadastrando Borracharia ==="
 curl -X POST http://localhost:8000/api/borracharia/register/ \
@@ -24,7 +24,7 @@ curl -X POST http://localhost:8000/api/borracharia/register/ \
     "email": "borracharia.web@xbpneus.com",
     "password": "Senha123456",
     "password_confirm": "Senha123456"
-  }' | python3 -m json.tool
+  }' | python3.11 -m json.tool
 
 echo -e "\n=== Cadastrando Revenda ==="
 curl -X POST http://localhost:8000/api/revenda/register/ \
@@ -36,7 +36,7 @@ curl -X POST http://localhost:8000/api/revenda/register/ \
     "email": "revenda.web@xbpneus.com",
     "password": "Senha123456",
     "password_confirm": "Senha123456"
-  }' | python3 -m json.tool
+  }' | python3.11 -m json.tool
 
 echo -e "\n=== Cadastrando Recapagem ==="
 curl -X POST http://localhost:8000/api/recapagem/register/ \
@@ -48,6 +48,6 @@ curl -X POST http://localhost:8000/api/recapagem/register/ \
     "email": "recapagem.web@xbpneus.com",
     "password": "Senha123456",
     "password_confirm": "Senha123456"
-  }' | python3 -m json.tool
+  }' | python3.11 -m json.tool
 
 echo -e "\n=== Todos os usuários cadastrados! ==="

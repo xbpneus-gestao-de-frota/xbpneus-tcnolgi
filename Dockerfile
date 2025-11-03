@@ -22,9 +22,9 @@ RUN apt-get update && apt-get install -y \
 # Copiar requirements
 COPY requirements-production.txt .
 
-# Instalar dependências Python
-RUN pip install --upgrade pip && \
-    pip install -r requirements-production.txt
+# Instalar dependências Python com Python 3.11 explícito
+RUN python3.11 -m pip install --upgrade pip && \
+    python3.11 -m pip install -r requirements-production.txt
 
 # Copiar código do projeto
 COPY . .
@@ -33,7 +33,7 @@ COPY . .
 RUN mkdir -p logs staticfiles media
 
 # Coletar arquivos estáticos
-RUN python manage.py collectstatic --noinput --settings=config.production
+RUN python3.11 manage.py collectstatic --noinput --settings=config.production
 
 # Criar usuário não-root
 RUN useradd -m -u 1000 xbpneus && \

@@ -2,18 +2,18 @@
 # exit on error
 set -o errexit
 
-# Install Python dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
+# Install Python dependencies using Python 3.11 explicitly
+python3.11 -m pip install --upgrade pip
+python3.11 -m pip install -r requirements.txt
 
 # Collect static files
-python manage.py collectstatic --no-input
+python3.11 manage.py collectstatic --no-input
 
 # Run migrations
-python manage.py migrate
+python3.11 manage.py migrate
 
 # Create superuser if it doesn't exist
-python manage.py shell <<EOF
+python3.11 manage.py shell <<EOF
 import os
 from django.contrib.auth import get_user_model
 
