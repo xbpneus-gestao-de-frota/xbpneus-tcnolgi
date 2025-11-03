@@ -239,7 +239,7 @@ export default function Cadastro() {
 
             <div>
               <input
-                type="text"
+             type="tet"
                 name="telefone"
                 placeholder="Contato Telefônico"
                 value={form.telefone}
