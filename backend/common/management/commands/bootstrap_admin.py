@@ -1,5 +1,7 @@
+import os
+
 from django.conf import settings
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 
 from backend.transportador.models import UsuarioTransportador
@@ -9,8 +11,14 @@ class Command(BaseCommand):
     help = "Garante um superadmin aprovado e ativo."
 
     def handle(self, *args, **options):
-        email = getattr(settings, "ADMIN_EMAIL", None) or "catanharacing@gmail.com"
-        password = getattr(settings, "ADMIN_PASSWORD", None) or "fer69@HOTMAIL"
+        email = os.getenv("ADMIN_EMAIL") or getattr(settings, "ADMIN_EMAIL", None)
+        password = os.getenv("ADMIN_PASSWORD") or getattr(settings, "ADMIN_PASSWORD", None)
+
+        if not email or not password:
+            raise CommandError(
+                "ADMIN_EMAIL and ADMIN_PASSWORD must be provided via environment variables "
+                "or Django settings before running bootstrap_admin."
+            )
 
         defaults = {
             "nome_razao_social": "XBP Admin",
