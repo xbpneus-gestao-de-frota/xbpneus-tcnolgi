@@ -15,12 +15,24 @@ def api_client():
 def create_user():
     def _create_user(email, password, is_staff=False, is_active=True):
         user_model = get_user_model()
-        return user_model.objects.create_user(
+        user, created = user_model.objects.get_or_create(
             email=email,
-            password=password,
-            is_staff=is_staff,
-            is_active=is_active,
+            defaults={
+                "is_staff": is_staff,
+                "is_active": is_active,
+            },
         )
+
+        if created:
+            user.set_password(password)
+        else:
+            if password:
+                user.set_password(password)
+            user.is_staff = is_staff
+            user.is_active = is_active
+
+        user.save()
+        return user
     return _create_user
 
 @pytest.fixture
@@ -98,4 +110,87 @@ def test_vehicle_maintenance_fields(auth_client, setup_vehicle_dependencies):
     assert response.data["precisa_manutencao"] == True
     assert response.data["km_ate_manutencao"] == -1
 
+
+@pytest.mark.django_db
+def test_fleet_analysis_endpoint(auth_client, setup_vehicle_dependencies):
+    Vehicle.objects.all().delete()
+    empresa, filial, modelo_veiculo, config_operacional = setup_vehicle_dependencies
+
+    Vehicle.objects.create(
+        empresa=empresa,
+        filial=filial,
+        placa="AAA1B23",
+        modelo_veiculo=modelo_veiculo,
+        ano_fabricacao=2019,
+        ano_modelo=2020,
+        tipo="CAMINHAO",
+        status="ATIVO",
+        km=120000,
+        km_ultima_manutencao=110000,
+        km_proxima_manutencao=125000,
+        configuracao_operacional=config_operacional,
+    )
+
+    Vehicle.objects.create(
+        empresa=empresa,
+        filial=filial,
+        placa="BBB2C34",
+        modelo_veiculo=modelo_veiculo,
+        ano_fabricacao=2017,
+        ano_modelo=2018,
+        tipo="CARRETA",
+        status="MANUTENCAO",
+        km=180000,
+        km_ultima_manutencao=170000,
+        km_proxima_manutencao=175000,
+        configuracao_operacional=config_operacional,
+    )
+
+    Vehicle.objects.create(
+        empresa=empresa,
+        filial=filial,
+        placa="CCC3D45",
+        modelo_veiculo=modelo_veiculo,
+        ano_fabricacao=2016,
+        ano_modelo=2017,
+        tipo="CAMINHAO",
+        status="ATIVO",
+        km=90000,
+        km_ultima_manutencao=85000,
+        km_proxima_manutencao=None,
+        configuracao_operacional=config_operacional,
+    )
+
+    Vehicle.objects.create(
+        empresa=empresa,
+        filial=filial,
+        placa="DDD4E56",
+        modelo_veiculo=modelo_veiculo,
+        ano_fabricacao=2021,
+        ano_modelo=2022,
+        tipo="CAMINHAO",
+        status="ATIVO",
+        km=174800,
+        km_ultima_manutencao=170000,
+        km_proxima_manutencao=175000,
+        configuracao_operacional=config_operacional,
+    )
+
+    url = reverse("frota-analise-list")
+    response = auth_client.get(url)
+
+    assert response.status_code == 200, response.data
+    data = response.data
+
+    assert data["total_veiculos"] == 4
+    assert data["por_status"].get("ATIVO") == 3
+    assert data["por_status"].get("MANUTENCAO") == 1
+    assert data["por_tipo"].get("CAMINHAO") == 3
+    assert data["por_tipo"].get("CARRETA") == 1
+    assert data["manutencao"]["precisam_manutencao"] == 1
+    assert data["manutencao"]["sem_agendamento"] == 1
+
+    proximas = data["manutencao"]["proximas_manutencoes"]
+    assert isinstance(proximas, list)
+    assert any(item["placa"] == "DDD4E56" for item in proximas)
 
