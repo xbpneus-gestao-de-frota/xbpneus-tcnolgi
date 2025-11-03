@@ -15,12 +15,13 @@ export default function Login() {
     setLoading(true);
     setMsg("");
     try {
-      const { userRole, redirectUrl } = \1
-navigate('/dashboard/transportador');
+      const { userRole, redirectUrl } = await login(username, senha);
+      const fallbackRedirect = "/dashboard/transportador";
+      const destination = redirectUrl || fallbackRedirect;
 
       console.log("Login successful. User Role:", userRole);
       console.log("Redirecting to Dashboard:", redirectUrl);
-      nav(redirectUrl, { replace: true });
+      nav(destination, { replace: true });
     } catch (error) {
       console.error("Login failed:", error);
       if (error.response && error.response.data && error.response.data.detail) {

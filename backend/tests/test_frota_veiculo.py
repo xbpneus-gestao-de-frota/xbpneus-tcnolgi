@@ -16,23 +16,6 @@ def create_user():
     def _create_user(email, password, is_staff=False, is_active=True):
         user_model = get_user_model()
         user, created = user_model.objects.get_or_create(
-        existing_user = user_model.objects.filter(email=email).first()
-        if existing_user:
-            updated_fields = []
-            if existing_user.is_staff != is_staff:
-                existing_user.is_staff = is_staff
-                updated_fields.append("is_staff")
-            if existing_user.is_active != is_active:
-                existing_user.is_active = is_active
-                updated_fields.append("is_active")
-            if password and not existing_user.check_password(password):
-                existing_user.set_password(password)
-                updated_fields.append("password")
-            if updated_fields:
-                existing_user.save(update_fields=updated_fields)
-            return existing_user
-
-        return user_model.objects.create_user(
             email=email,
             defaults={
                 "is_staff": is_staff,
@@ -40,15 +23,25 @@ def create_user():
             },
         )
 
+        updated = False
+
         if created:
-            user.set_password(password)
-        else:
             if password:
                 user.set_password(password)
-            user.is_staff = is_staff
-            user.is_active = is_active
+        else:
+            if user.is_staff != is_staff:
+                user.is_staff = is_staff
+                updated = True
+            if user.is_active != is_active:
+                user.is_active = is_active
+                updated = True
+            if password and not user.check_password(password):
+                user.set_password(password)
+                updated = True
 
-        user.save()
+        if created or updated:
+            user.save()
+
         return user
     return _create_user
 
