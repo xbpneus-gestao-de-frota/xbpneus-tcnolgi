@@ -1,22 +1,26 @@
 """
-Utilitários JWT Customizados para Múltiplos Tipos de Usuário
-Sistema XBPNEUS v10
+Utilitários JWT customizados para múltiplos tipos de usuário.
 
-Este módulo fornece funções para gerar tokens JWT que funcionam
-com múltiplos modelos de usuário independentes, sem depender do
-AUTH_USER_MODEL do Django.
+Este módulo fornece funções para gerar tokens JWT compatíveis com
+múltiplos modelos de usuário independentes, ao mesmo tempo em que
+mantém a integração com os recursos nativos do SimpleJWT (como
+blacklist e rotação de tokens) através do uso do RefreshToken.for_user.
 """
 
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.apps import apps
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 def create_tokens_for_user(user):
     """
     Cria tokens JWT (access e refresh) para qualquer tipo de usuário.
     
-    Esta função contorna o problema do OutstandingToken que depende
-    do AUTH_USER_MODEL, criando tokens sem registrá-los no blacklist.
+    Sempre que possível utilizamos RefreshToken.for_user para registrar o token
+    no banco de dados do SimpleJWT, habilitando blacklist e rotação. Para
+    modelos que não são o AUTH_USER_MODEL padrão, recuamos para um token em
+    memória mantendo as mesmas claims personalizadas.
     
     Args:
         user: Instância de qualquer modelo de usuário (UsuarioTransportador,
@@ -32,11 +36,16 @@ def create_tokens_for_user(user):
         >>> print(tokens['access'])
     """
     
-    # Cria o refresh token
-    refresh = RefreshToken()
-    
-    # Adiciona claims customizados
-    refresh['user_id'] = user.id
+    transportador_model = apps.get_model(settings.AUTH_USER_MODEL)
+    use_registered_token = isinstance(user, transportador_model)
+
+    if use_registered_token:
+        refresh = RefreshToken.for_user(user)
+    else:
+        refresh = RefreshToken()
+        refresh['user_id'] = user.id
+
+    # Adiciona claims customizados mantidos tanto no refresh quanto no access
     refresh['email'] = user.email
 
     # Identifica o tipo de usuário usando ContentType
@@ -53,7 +62,8 @@ def create_tokens_for_user(user):
         'usuariorecapagem': 'recapagem',
         'motoristaexterno': 'motorista_externo',
     }
-    refresh['user_role'] = role_map.get(content_type.model, 'transportador')
+    user_role = role_map.get(content_type.model, 'transportador')
+    refresh['user_role'] = user_role
     
     # Adiciona nome do usuário
     if hasattr(user, 'nome_completo'):
@@ -66,6 +76,14 @@ def create_tokens_for_user(user):
     # Adiciona informações de aprovação
     refresh['aprovado'] = getattr(user, 'aprovado', True)
     refresh['is_active'] = user.is_active
+
+    # Propaga as informações relevantes também para o access token
+    access_token = refresh.access_token
+    access_token['user_type'] = user_type
+    access_token['user_role'] = user_role
+    access_token['email'] = user.email
+    access_token['aprovado'] = getattr(user, 'aprovado', True)
+    access_token['is_active'] = user.is_active
     
     return {
         'refresh': str(refresh),

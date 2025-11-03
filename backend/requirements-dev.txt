@@ -4,3 +4,5 @@ pipdeptree
 pip-audit
 bandit
 ruff
+selenium
+webdriver-manager

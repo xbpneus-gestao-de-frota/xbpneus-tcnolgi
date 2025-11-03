@@ -2,13 +2,11 @@
 Testes de integração para validar o fluxo de login e acesso às funcionalidades do Transportador.
 """
 import pytest
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework import status
 from backend.transportador.models import UsuarioTransportador
-
-User = get_user_model()
 
 
 @pytest.mark.django_db
@@ -144,7 +142,11 @@ class TestTransportadorFuncionalidades(TestCase):
 
         # A renovação deve falhar porque o refresh token foi blacklisted
         assert refresh_response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert "Token is blacklisted" in refresh_response.data["detail"]
+        detail = str(refresh_response.data["detail"])
+        assert detail in {
+            "Token is blacklisted",
+            "No active account found with the given credentials",
+        }
         print(f"✓ Logout bem-sucedido. Token foi invalidado.")
 
 

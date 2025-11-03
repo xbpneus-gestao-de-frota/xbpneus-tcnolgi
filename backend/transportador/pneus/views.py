@@ -1,13 +1,21 @@
+import logging
+
 from django.utils import timezone
-from rest_framework import viewsets, permissions, filters
-from backend.common.permissions import OptionalRolePermission
+from rest_framework import filters, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from backend.common.audit import AuditedModelViewSet
 from backend.common.export import export_csv, export_xlsx, export_csv_streaming
-from .models import Tire, Application
-import logging
-from .serializers import TireSerializer, ApplicationSerializer
+from backend.common.permissions import OptionalRolePermission
+
+from .models import Application, MedicaoPneu, MovimentacaoPneu, Tire
+from .serializers import (
+    ApplicationSerializer,
+    MedicaoPneuSerializer,
+    MovimentacaoPneuSerializer,
+    TireSerializer,
+)
 
 logger = logging.getLogger(__name__)
 class TireViewSet(AuditedModelViewSet):
@@ -83,13 +91,13 @@ class TireViewSet(AuditedModelViewSet):
         return Response(self.get_serializer(pneu).data)
 
 class ApplicationViewSet(AuditedModelViewSet):
-    queryset = Application.objects.all().order_by("id")
+    queryset = Application.objects.select_related('pneu', 'veiculo').all().order_by("-id")
     serializer_class = ApplicationSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['id']
-    ordering_fields = ['id']
+    search_fields = ['id', 'pneu__codigo', 'veiculo__placa', 'medida']
+    ordering_fields = ['id', 'data_montagem', 'data_desmontagem']
     permission_classes = [permissions.IsAuthenticated, OptionalRolePermission]
-    filterset_fields = ['medida','status','posicao_atual']
+    filterset_fields = ['pneu', 'veiculo', 'medida', 'ativo']
 
     @action(detail=False, methods=["get"], url_path="export")
     def export(self, request):
@@ -100,3 +108,23 @@ class ApplicationViewSet(AuditedModelViewSet):
         if fmt == "xlsx":
             return export_xlsx(qs, fields, filename=filename)
         return export_csv_streaming(qs, fields, filename=filename) if request.query_params.get("stream") in {"1","true","True"} else export_csv(qs, fields, filename=filename)
+
+
+class MovimentacaoPneuViewSet(AuditedModelViewSet):
+    queryset = MovimentacaoPneu.objects.select_related('pneu').all().order_by("-data_movimentacao")
+    serializer_class = MovimentacaoPneuSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['pneu__codigo', 'tipo', 'origem', 'destino']
+    ordering_fields = ['data_movimentacao', 'km_pneu']
+    permission_classes = [permissions.IsAuthenticated, OptionalRolePermission]
+    filterset_fields = ['pneu', 'tipo']
+
+
+class MedicaoPneuViewSet(AuditedModelViewSet):
+    queryset = MedicaoPneu.objects.select_related('pneu').all().order_by("-data_medicao")
+    serializer_class = MedicaoPneuSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['pneu__codigo']
+    ordering_fields = ['data_medicao', 'sulco']
+    permission_classes = [permissions.IsAuthenticated, OptionalRolePermission]
+    filterset_fields = ['pneu']

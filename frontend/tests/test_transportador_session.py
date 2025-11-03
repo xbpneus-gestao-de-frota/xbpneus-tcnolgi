@@ -1,15 +1,31 @@
-"""
-Testes de Selenium para validar a persistência de sessão e acesso às funcionalidades do Transportador.
-"""
-import pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
+"""Testes end-to-end do fluxo do Transportador executados com Selenium."""
+
+from __future__ import annotations
+
+import os
 import time
+
+import pytest
+
+if os.environ.get("RUN_SELENIUM_TESTS") != "1":
+    pytest.skip(
+        "Testes de Selenium desabilitados por padrão; defina RUN_SELENIUM_TESTS=1 para executá-los.",
+        allow_module_level=True,
+    )
+
+try:
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.chrome.service import Service
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support import expected_conditions as EC
+    from selenium.webdriver.support.ui import WebDriverWait
+    from webdriver_manager.chrome import ChromeDriverManager
+except ModuleNotFoundError as exc:  # pragma: no cover - apenas para ambientes sem dependências opcionais
+    pytest.skip(
+        f"Dependência opcional ausente para os testes de Selenium: {exc.name}",
+        allow_module_level=True,
+    )
 
 BASE_URL = "https://xbpneus-frontend.onrender.com"
 TRANSPORTADOR_EMAIL = "transportador.teste2@xbpneus.com"

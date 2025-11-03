@@ -5,6 +5,7 @@ python-json-logger
 djangorestframework
 djangorestframework-simplejwt
 drf-spectacular
+drf-spectacular-sidecar
 Django>=5.0
 python-decouple
 requests
@@ -15,7 +16,9 @@ django-cors-headers
 django-redis
 django-axes
 django-health-check
+django-rq
 psutil
+psycopg2-binary
 redis
 pika
 django-storages

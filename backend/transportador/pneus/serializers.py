@@ -1,7 +1,9 @@
-from rest_framework import serializers
-from .models import Tire, Application, MovimentacaoPneu, MedicaoPneu
 from decimal import Decimal
 import re
+
+from rest_framework import serializers
+
+from .models import Application, MedicaoPneu, MovimentacaoPneu, Tire
 
 class TireSerializer(serializers.ModelSerializer):
     """Serializer para pneus com validações de negócio"""
@@ -80,20 +82,31 @@ class TireSerializer(serializers.ModelSerializer):
         """Validações cruzadas"""
         km_atual = data.get('km_atual', 0)
         km_total = data.get('km_total', 0)
-        
+
         if km_atual > km_total:
             raise serializers.ValidationError({
                 'km_atual': 'KM atual não pode ser maior que KM total'
             })
-        
+
         status = data.get('status')
         posicao_atual = data.get('posicao_atual', '')
-        
+
         if status == 'MONTADO' and not posicao_atual:
             raise serializers.ValidationError({
                 'posicao_atual': 'Pneu montado deve ter posição atual informada'
             })
-        
+
+        sulco_novo = data.get('profundidade_sulco_novo')
+        sulco_minimo = data.get('profundidade_sulco_minimo')
+        if (
+            sulco_novo is not None
+            and sulco_minimo is not None
+            and sulco_novo <= sulco_minimo
+        ):
+            raise serializers.ValidationError({
+                'profundidade_sulco_novo': 'Profundidade nova deve ser maior que o sulco mínimo'
+            })
+
         return data
 
 
@@ -102,7 +115,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     
     pneu_codigo = serializers.CharField(source='pneu.codigo', read_only=True)
     veiculo_placa = serializers.CharField(source='veiculo.placa', read_only=True)
-    
+
     class Meta:
         model = Application
         fields = "__all__"
@@ -110,20 +123,25 @@ class ApplicationSerializer(serializers.ModelSerializer):
     
     def validate_km_montagem(self, value):
         """Valida KM de montagem"""
-        if value < 0:
+        if value is not None and value < 0:
             raise serializers.ValidationError("KM de montagem não pode ser negativo")
         return value
-    
+
     def validate(self, data):
         """Validações cruzadas"""
         km_montagem = data.get('km_montagem', 0)
         km_desmontagem = data.get('km_desmontagem')
-        
+
         if km_desmontagem and km_desmontagem <= km_montagem:
             raise serializers.ValidationError({
                 'km_desmontagem': 'KM de desmontagem deve ser maior que KM de montagem'
             })
-        
+
+        pneu = data.get('pneu')
+        medida = data.get('medida')
+        if pneu and not medida:
+            data['medida'] = pneu.medida
+
         return data
 
 
@@ -147,7 +165,7 @@ class MedicaoPneuSerializer(serializers.ModelSerializer):
         model = MedicaoPneu
         fields = "__all__"
         read_only_fields = ['data_medicao']
-    
+
     def validate_sulco(self, value):
         """Valida profundidade do sulco"""
         if value < 0:
@@ -160,5 +178,5 @@ class MedicaoPneuSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Profundidade do sulco abaixo do limite legal (1.6mm)"
             )
-        
+
         return value
