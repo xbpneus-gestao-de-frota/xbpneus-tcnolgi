@@ -1,17 +1,22 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+const initialFormState = {
+  tipo_cliente: "",
+  nome_razao_social: "",
+  nome_completo: "",
+  cnpj: "",
+  cpf: "",
+  cnh: "",
+  categoria_cnh: "",
+  telefone: "",
+  email: "",
+  password: "",
+  password_confirm: "",
+};
+
 export default function Cadastro() {
-  const [form, setForm] = useState({
-    nome_razao_social: "",
-    cnpj: "",
-    telefone: "",
-    email: "",
-    password: "",
-    password_confirm: "",
-    tipo_cliente: "",
-  });
+  const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState({});
   const [showSenha, setShowSenha] = useState(false);
   const [showConfirmar, setShowConfirmar] = useState(false);
@@ -19,9 +24,30 @@ export default function Cadastro() {
   const [message, setMessage] = useState("");
   const nav = useNavigate();
 
+  const isMotorista = form.tipo_cliente === "motorista";
+  const showEmpresaFields = !isMotorista && Boolean(form.tipo_cliente);
+
   const validarCNPJ = (cnpj) => {
     const cleaned = cnpj.replace(/[^\d]/g, "");
     return cleaned.length === 14;
+  };
+
+  const validarCPF = (cpf) => {
+    const cleaned = cpf.replace(/[^\d]/g, "");
+    return cleaned.length === 11;
+  };
+
+  const validarCNH = (cnh) => {
+    const cleaned = cnh.replace(/[^\d]/g, "");
+    return cleaned.length === 11;
+  };
+
+  const clearFieldError = (field) => {
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[field];
+      return newErrors;
+    });
   };
 
   const handleCNPJChange = (e) => {
@@ -30,10 +56,51 @@ export default function Cadastro() {
     if (value.length > 0 && !validarCNPJ(value)) {
       setErrors({ ...errors, cnpj: "CNPJ deve ter 14 dígitos" });
     } else {
-      const newErrors = { ...errors };
-      delete newErrors.cnpj;
-      setErrors(newErrors);
+      clearFieldError("cnpj");
     }
+  };
+
+  const handleCPFChange = (e) => {
+    const value = e.target.value.replace(/[^\d]/g, "");
+    setForm({ ...form, cpf: value });
+    if (value.length > 0 && !validarCPF(value)) {
+      setErrors({ ...errors, cpf: "CPF deve ter 11 dígitos" });
+    } else {
+      clearFieldError("cpf");
+    }
+  };
+
+  const handleCNHChange = (e) => {
+    const value = e.target.value.replace(/[^\d]/g, "");
+    setForm({ ...form, cnh: value });
+    if (value.length > 0 && !validarCNH(value)) {
+      setErrors({ ...errors, cnh: "CNH deve ter 11 dígitos" });
+    } else {
+      clearFieldError("cnh");
+    }
+  };
+
+  const handleTipoClienteChange = (e) => {
+    const value = e.target.value;
+    setForm((prev) => ({
+      ...prev,
+      tipo_cliente: value,
+      ...(value === "motorista"
+        ? { nome_razao_social: "", cnpj: "" }
+        : { nome_completo: "", cpf: "", cnh: "", categoria_cnh: "" }),
+    }));
+
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors.tipo_cliente;
+      delete newErrors.nome_razao_social;
+      delete newErrors.cnpj;
+      delete newErrors.nome_completo;
+      delete newErrors.cpf;
+      delete newErrors.cnh;
+      delete newErrors.categoria_cnh;
+      return newErrors;
+    });
   };
 
   const handleConfirmarSenhaChange = (e) => {
@@ -58,13 +125,8 @@ export default function Cadastro() {
     let hasError = false;
     const newErrors = {};
 
-    if (!form.nome_razao_social) {
-      newErrors.nome_razao_social = "Nome/Razão Social é obrigatório";
-      hasError = true;
-    }
-
-    if (!validarCNPJ(form.cnpj)) {
-      newErrors.cnpj = "CNPJ inválido";
+    if (!form.tipo_cliente) {
+      newErrors.tipo_cliente = "Tipo de usuário é obrigatório";
       hasError = true;
     }
 
@@ -83,9 +145,43 @@ export default function Cadastro() {
       hasError = true;
     }
 
-    if (!form.tipo_cliente) {
-      newErrors.tipo_cliente = "Tipo de usuário é obrigatório";
+    if (!form.telefone) {
+      newErrors.telefone = "Telefone é obrigatório";
       hasError = true;
+    }
+
+    if (form.tipo_cliente) {
+      if (isMotorista) {
+        if (!form.nome_completo) {
+          newErrors.nome_completo = "Nome completo é obrigatório";
+          hasError = true;
+        }
+
+        if (!validarCPF(form.cpf)) {
+          newErrors.cpf = "CPF deve ter 11 dígitos";
+          hasError = true;
+        }
+
+        if (!validarCNH(form.cnh)) {
+          newErrors.cnh = "CNH deve ter 11 dígitos";
+          hasError = true;
+        }
+
+        if (!form.categoria_cnh) {
+          newErrors.categoria_cnh = "Categoria da CNH é obrigatória";
+          hasError = true;
+        }
+      } else {
+        if (!form.nome_razao_social) {
+          newErrors.nome_razao_social = "Nome/Razão Social é obrigatório";
+          hasError = true;
+        }
+
+        if (!validarCNPJ(form.cnpj)) {
+          newErrors.cnpj = "CNPJ inválido";
+          hasError = true;
+        }
+      }
     }
 
     if (hasError) {
@@ -96,26 +192,34 @@ export default function Cadastro() {
     setLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-      
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
       // Usar o endpoint de registro full para todos os tipos de usuário (Backend faz o roteamento)
-      const endpoint = '/api/users/register_full/';
-      
+      const endpoint = "/api/users/register_full/";
+
       // Preparar payload
       const payload = {
         email: form.email,
         password: form.password,
         password_confirm: form.password_confirm,
         telefone: form.telefone,
-        nome_razao_social: form.nome_razao_social,
-        cnpj: form.cnpj,
         tipo_usuario: form.tipo_cliente, // Adicionado o tipo de usuário ao payload
       };
 
+      if (isMotorista) {
+        payload.nome_completo = form.nome_completo;
+        payload.cpf = form.cpf.replace(/[^\d]/g, "");
+        payload.cnh = form.cnh.replace(/[^\d]/g, "");
+        payload.categoria_cnh = form.categoria_cnh;
+      } else {
+        payload.nome_razao_social = form.nome_razao_social;
+        payload.cnpj = form.cnpj.replace(/[^\d]/g, "");
+      }
+
       const response = await fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
@@ -128,26 +232,36 @@ export default function Cadastro() {
         nav("/pos-cadastro");
       } else {
         setLoading(false);
-        
+
         // Melhor tratamento de erros - exibir mensagens específicas
         if (data.email) {
-          setMessage(`Email: ${Array.isArray(data.email) ? data.email.join(', ') : data.email}`);
+          setMessage(`Email: ${Array.isArray(data.email) ? data.email.join(", ") : data.email}`);
         } else if (data.cnpj) {
-          setMessage(`CNPJ: ${Array.isArray(data.cnpj) ? data.cnpj.join(', ') : data.cnpj}`);
+          setMessage(`CNPJ: ${Array.isArray(data.cnpj) ? data.cnpj.join(", ") : data.cnpj}`);
+        } else if (data.cpf) {
+          setMessage(`CPF: ${Array.isArray(data.cpf) ? data.cpf.join(", ") : data.cpf}`);
+        } else if (data.cnh) {
+          setMessage(`CNH: ${Array.isArray(data.cnh) ? data.cnh.join(", ") : data.cnh}`);
+        } else if (data.categoria_cnh) {
+          setMessage(`Categoria CNH: ${Array.isArray(data.categoria_cnh) ? data.categoria_cnh.join(", ") : data.categoria_cnh}`);
+        } else if (data.nome_completo) {
+          setMessage(`Nome completo: ${Array.isArray(data.nome_completo) ? data.nome_completo.join(", ") : data.nome_completo}`);
         } else if (data.password) {
-          setMessage(`Senha: ${Array.isArray(data.password) ? data.password.join(', ') : data.password}`);
+          setMessage(`Senha: ${Array.isArray(data.password) ? data.password.join(", ") : data.password}`);
+        } else if (data.error) {
+          setMessage(Array.isArray(data.error) ? data.error.join(", ") : data.error);
         } else if (data.detail) {
           setMessage(data.detail);
         } else if (data.non_field_errors) {
-          setMessage(Array.isArray(data.non_field_errors) ? data.non_field_errors.join(', ') : data.non_field_errors);
+          setMessage(Array.isArray(data.non_field_errors) ? data.non_field_errors.join(", ") : data.non_field_errors);
         } else {
-          setMessage('Erro ao realizar cadastro. Verifique os dados e tente novamente.');
+          setMessage("Erro ao realizar cadastro. Verifique os dados e tente novamente.");
         }
       }
     } catch (error) {
       setLoading(false);
-      setMessage('Erro ao conectar com o servidor. Verifique sua conexão e tente novamente.');
-      console.error('Erro no cadastro:', error);
+      setMessage("Erro ao conectar com o servidor. Verifique sua conexão e tente novamente.");
+      console.error("Erro no cadastro:", error);
     }
   };
 
@@ -196,46 +310,169 @@ export default function Cadastro() {
           </h2>
 
           {message && (
-            <div className={`mb-4 p-3 rounded ${
-              message.includes('Erro') || message.includes('Email:') || message.includes('CNPJ:') || message.includes('Senha:')
-                ? 'bg-red-100 text-red-700 border border-red-300'
-                : 'bg-green-100 text-green-700 border border-green-300'
-            }`}>
+            <div
+              className={`mb-4 p-3 rounded ${
+                message.includes("Erro") ||
+                message.includes("Email:") ||
+                message.includes("CNPJ:") ||
+                message.includes("Senha:") ||
+                message.includes("CPF:") ||
+                message.includes("CNH:")
+                  ? "bg-red-100 text-red-700 border border-red-300"
+                  : "bg-green-100 text-green-700 border border-green-300"
+              }`}
+            >
               {message}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <input
-                type="text"
-                name="nome"
-                placeholder="Nome/Razão Social"
-                value={form.nome_razao_social}
-                onChange={(e) => setForm({ ...form, nome_razao_social: e.target.value })}
-                className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+              <select
+                name="tipo_cliente"
+                value={form.tipo_cliente}
+                onChange={handleTipoClienteChange}
+                className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-gray-900"
+                style={{
+                  backgroundColor: "white",
+                  opacity: 1,
+                  color: form.tipo_cliente ? "#1e40af" : "#6b7280",
+                }}
                 required
-              />
-              {errors.nome_razao_social && (
-                <div className="text-red-500 text-sm mt-1">{errors.nome_razao_social}</div>
+              >
+                <option value="" style={{ backgroundColor: "white" }}>
+                  Selecione o tipo de usuário
+                </option>
+                <option value="transportador" style={{ backgroundColor: "white" }}>
+                  Transportador
+                </option>
+                <option value="motorista" style={{ backgroundColor: "white" }}>
+                  Motorista
+                </option>
+                <option value="revenda" style={{ backgroundColor: "white" }}>
+                  Revenda
+                </option>
+                <option value="borracharia" style={{ backgroundColor: "white" }}>
+                  Borracharia
+                </option>
+                <option value="recapagem" style={{ backgroundColor: "white" }}>
+                  Recapagem
+                </option>
+              </select>
+              {errors.tipo_cliente && (
+                <div className="text-red-500 text-sm mt-1">{errors.tipo_cliente}</div>
               )}
             </div>
 
-            <div>
-              <input
-                type="text"
-                name="cnpj"
-                placeholder="CNPJ (apenas números)"
-                value={form.cnpj}
-                onChange={handleCNPJChange}
-                className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
-                maxLength="14"
-                required
-              />
-              {errors.cnpj && (
-                <div className="text-red-500 text-sm mt-1">{errors.cnpj}</div>
-              )}
-            </div>
+            {isMotorista && (
+              <>
+                <div>
+                  <input
+                    type="text"
+                    name="nome_completo"
+                    placeholder="Nome completo"
+                    value={form.nome_completo}
+                    onChange={(e) => {
+                      setForm({ ...form, nome_completo: e.target.value });
+                      clearFieldError("nome_completo");
+                    }}
+                    className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+                    required
+                  />
+                  {errors.nome_completo && (
+                    <div className="text-red-500 text-sm mt-1">{errors.nome_completo}</div>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    name="cpf"
+                    placeholder="CPF (apenas números)"
+                    value={form.cpf}
+                    onChange={handleCPFChange}
+                    className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+                    maxLength="11"
+                    required
+                  />
+                  {errors.cpf && (
+                    <div className="text-red-500 text-sm mt-1">{errors.cpf}</div>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    name="cnh"
+                    placeholder="CNH (apenas números)"
+                    value={form.cnh}
+                    onChange={handleCNHChange}
+                    className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+                    maxLength="11"
+                    required
+                  />
+                  {errors.cnh && (
+                    <div className="text-red-500 text-sm mt-1">{errors.cnh}</div>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    name="categoria_cnh"
+                    placeholder="Categoria da CNH"
+                    value={form.categoria_cnh}
+                    onChange={(e) => {
+                      setForm({ ...form, categoria_cnh: e.target.value.toUpperCase() });
+                      clearFieldError("categoria_cnh");
+                    }}
+                    className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+                    required
+                  />
+                  {errors.categoria_cnh && (
+                    <div className="text-red-500 text-sm mt-1">{errors.categoria_cnh}</div>
+                  )}
+                </div>
+              </>
+            )}
+
+            {showEmpresaFields && (
+              <>
+                <div>
+                  <input
+                    type="text"
+                    name="nome"
+                    placeholder="Nome/Razão Social"
+                    value={form.nome_razao_social}
+                    onChange={(e) => {
+                      setForm({ ...form, nome_razao_social: e.target.value });
+                      clearFieldError("nome_razao_social");
+                    }}
+                    className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+                    required
+                  />
+                  {errors.nome_razao_social && (
+                    <div className="text-red-500 text-sm mt-1">{errors.nome_razao_social}</div>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    name="cnpj"
+                    placeholder="CNPJ (apenas números)"
+                    value={form.cnpj}
+                    onChange={handleCNPJChange}
+                    className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+                    maxLength="14"
+                    required
+                  />
+                  {errors.cnpj && (
+                    <div className="text-red-500 text-sm mt-1">{errors.cnpj}</div>
+                  )}
+                </div>
+              </>
+            )}
 
             <div>
               <input
@@ -243,11 +480,15 @@ export default function Cadastro() {
                 name="telefone"
                 placeholder="Contato Telefônico"
                 value={form.telefone}
-                onChange={(e) => setForm({ ...form, telefone: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, telefone: e.target.value });
+                  clearFieldError("telefone");
+                }}
                 className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
+                required
               />
-              {errors.contato && (
-                <div className="text-red-500 text-sm mt-1">{errors.contato}</div>
+              {errors.telefone && (
+                <div className="text-red-500 text-sm mt-1">{errors.telefone}</div>
               )}
             </div>
 
@@ -257,7 +498,10 @@ export default function Cadastro() {
                 name="email"
                 placeholder="E-mail"
                 value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, email: e.target.value });
+                  clearFieldError("email");
+                }}
                 className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-blue-900"
                 required
               />
@@ -272,7 +516,10 @@ export default function Cadastro() {
                 name="password"
                 placeholder="Senha (mín. 6 caracteres)"
                 value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, password: e.target.value });
+                  clearFieldError("password");
+                }}
                 className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 pr-10 bg-white text-blue-900"
                 minLength="6"
                 required
@@ -309,40 +556,12 @@ export default function Cadastro() {
               )}
             </div>
 
-            <div>
-              <select
-                name="tipo_cliente"
-                value={form.tipo_cliente}
-                onChange={(e) =>
-                  setForm({ ...form, tipo_cliente: e.target.value })
-                }
-                className="w-full border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-3 py-2 bg-white text-gray-900"
-                style={{ 
-                  backgroundColor: "white",
-                  opacity: 1,
-                  color: form.tipo_cliente ? "#1e40af" : "#6b7280",
-                }}
-                required
-              >
-                <option value="" style={{ backgroundColor: "white" }}>Selecione o tipo de usuário</option>
-                <option value="transportador" style={{ backgroundColor: "white" }}>Transportador</option>
-                <option value="motorista" style={{ backgroundColor: "white" }}>Motorista</option>
-                <option value="revenda" style={{ backgroundColor: "white" }}>Revenda</option>
-                <option value="borracharia" style={{ backgroundColor: "white" }}>Borracharia</option>
-                <option value="recapagem" style={{ backgroundColor: "white" }}>Recapagem</option>
-              </select>
-              {errors.tipo_cliente && (
-                <div className="text-red-500 text-sm mt-1">{errors.tipo_cliente}</div>
-              )}
-            </div>
-
             <button
               type="submit"
               disabled={loading}
               className="w-full py-2 rounded-lg font-medium text-white shadow-lg disabled:opacity-50 hover:opacity-90 transition-opacity"
               style={{
-                backgroundImage:
-                  "linear-gradient(135deg, #60a5fa, #6366f1, #7c3aed)",
+                backgroundImage: "linear-gradient(135deg, #60a5fa, #6366f1, #7c3aed)",
                 boxShadow: "3px 3px 8px rgba(0,0,0,0.4)",
               }}
             >
@@ -351,10 +570,7 @@ export default function Cadastro() {
           </form>
 
           <div className="mt-4 text-center">
-            <Link
-              to="/login"
-              className="text-blue-700 hover:text-blue-800 hover:underline"
-            >
+            <Link to="/login" className="text-blue-700 hover:text-blue-800 hover:underline">
               Já tem conta? Faça login
             </Link>
           </div>
@@ -363,4 +579,3 @@ export default function Cadastro() {
     </div>
   );
 }
-

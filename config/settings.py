@@ -129,6 +129,7 @@ if os.getenv('ENABLE_HEALTH_CHECK_OPTIONALS') == '1':
         INSTALLED_APPS.append(optional_app)
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'backend.common.metrics.MetricsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -138,7 +139,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "axes.middleware.AxesMiddleware",
 ]
 
@@ -231,12 +231,16 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": DEFAULT_SCHEMA_CLASS,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "backend.common.custom_auth.MultiModelJWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
 }
+
+if DEBUG:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"].append(
+        "rest_framework.authentication.SessionAuthentication"
+    )
 
 if SPECTACULAR_ENABLED:
     SPECTACULAR_SETTINGS = {"TITLE": "XBPNEUS API", "VERSION": "v1"}
@@ -270,6 +274,7 @@ AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1
 AXES_LOCK_OUT_AT_FAILURE = True
 AXES_LOCKOUT_PARAMETERS = ["username", "ip_address"]
+AXES_EXCLUDED_URLS = [r"^api/token/", r"^api/token/refresh/"]
 
 # Logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
