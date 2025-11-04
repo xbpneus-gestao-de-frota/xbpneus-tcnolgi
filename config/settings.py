@@ -273,7 +273,7 @@ AXES_COOLOFF_TIME = 1
 AXES_LOCK_OUT_AT_FAILURE = True
 AXES_LOCKOUT_PARAMETERS = ["username", "ip_address"]
 # ES_EXCLUDE_URLS = [r'^admin/.*']
-AXES_EXCLUDE_URLS = [*r'^admin/.*']
+AXES_EXCLUDE_URLS = [r"^admin/.*"]
 # Logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOGGING = {
