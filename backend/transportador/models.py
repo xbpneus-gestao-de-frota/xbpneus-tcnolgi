@@ -20,21 +20,49 @@ class UsuarioTransportadorManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_active", True)
-        extra_fields.setdefault("aprovado", True)
+            def create_superuser(self, email, password=None, **extra_fields):
+            """
+            Cria e retorna um superusuário.  O Django exige que todos os
+            campos definidos em ``REQUIRED_FIELDS`` sejam fornecidos ao
+            utilizar ``createsuperuser --noinput``.  Como ``UsuarioTransportador``
+            inclui ``nome_razao_social`` e ``cnpj`` em ``REQUIRED_FIELDS``,
+            chamá‑lo sem esses parâmetros resultaria em ``CommandError``.  Para
+            permitir a criação automática durante o provisionamento (por exemplo,
+            em serviços como Render), fornecemos valores padrão caso não
+            estejam presentes em ``extra_fields``.  Esses valores podem ser
+            configurados via variáveis de ambiente:
 
-        user = self.create_user(email, password, **extra_fields)
-        if user.aprovado and not user.aprovado_em:
-            user.aprovado_em = timezone.now()
-            user.save(update_fields=["aprovado_em"])
-        return user
+            - ``DJANGO_SUPERUSER_NOME_RAZAO_SOCIAL``: nome ou razão social do
+              superusuário.  Padrão: "Administrador".
+            - ``DJANGO_SUPERUSER_CNPJ``: CNPJ associado ao superusuário.  Padrão:
+              "00000000000000".
 
+            Outros campos como ``is_staff``, ``is_superuser``, ``is_active``
+            e ``aprovado`` são definidos como ``True`` por padrão.
+            """
+            import os  # importação local para evitar dependência global ao configurar
 
-class UsuarioTransportador(AbstractBaseUser, PermissionsMixin):
-    """Modelo de usuário para Transportadores"""
+            # Definir campos obrigatórios padrão caso não fornecidos.
+            extra_fields.setdefault(
+                "nome_razao_social",
+                os.environ.get("DJANGO_SUPERUSER_NOME_RAZAO_SOCIAL", "Administrador"),
+            )
+            extra_fields.setdefault(
+                "cnpj",
+                os.environ.get("DJANGO_SUPERUSER_CNPJ", "00000000000000"),
+            )
+
+            extra_fields.setdefault("is_staff", True)
+            extra_fields.setdefault("is_superuser", True)
+            extra_fields.setdefault("is_active", True)
+            extra_fields.setdefault("aprovado", True)
+
+            user = self.create_user(email, password, **extra_fields)
+            # Registrar data de aprovação se ainda não definida
+            if user.aprovado and not user.aprovado_em:
+                user.aprovado_em = timezone.now()
+                user.save(update_fields=["aprovado_em"])
+            return user"""Modelo de usuário para Transportadores"""
 
     email = models.EmailField("E-mail", unique=True)
     nome_razao_social = models.CharField("Nome/Razão Social", max_length=200)
