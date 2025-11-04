@@ -62,7 +62,9 @@ class UsuarioTransportadorManager(BaseUserManager):
             if user.aprovado and not user.aprovado_em:
                 user.aprovado_em = timezone.now()
                 user.save(update_fields=["aprovado_em"])
-            return user"""Modelo de usuário para Transportadores"""
+            
+                return user"
+                ""Modelo de usuário para Transportadores"""
 
     email = models.EmailField("E-mail", unique=True)
     nome_razao_social = models.CharField("Nome/Razão Social", max_length=200)
