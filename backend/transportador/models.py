@@ -21,6 +21,27 @@ class UsuarioTransportadorManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
+        """Cria um superusuário preenchendo campos obrigatórios automaticamente.
+
+        Quando o comando ``createsuperuser --noinput`` é executado (ex.: em deploys
+        automatizados), o Django não pergunta por campos listados em
+        ``REQUIRED_FIELDS``. Como o modelo ``UsuarioTransportador`` exige
+        ``nome_razao_social`` e ``cnpj``, usamos valores padrão informados via
+        variáveis de ambiente ``DJANGO_SUPERUSER_NOME_RAZAO_SOCIAL`` e
+        ``DJANGO_SUPERUSER_CNPJ``. Caso não sejam fornecidos, aplicamos os
+        valores "Administrador" e "00000000000000", respectivamente. Ajuste os
+        valores conforme necessário configurando essas variáveis no ambiente.
+        """
+        import os
+
+        extra_fields.setdefault(
+            "nome_razao_social",
+            os.getenv("DJANGO_SUPERUSER_NOME_RAZAO_SOCIAL", "Administrador"),
+        )
+        extra_fields.setdefault(
+            "cnpj",
+            os.getenv("DJANGO_SUPERUSER_CNPJ", "00000000000000"),
+        )
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
