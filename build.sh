@@ -12,17 +12,11 @@ python manage.py collectstatic --no-input
 # Run migrations
 python manage.py migrate
 
-# Create superuser if it doesn't exist
-python manage.py shell <<EOF
-import os
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
-email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "admin@xbpneus.com")
-password = os.environ.get("DJANGO_SUPERUSER_PASSWORD", "Teste@2025")
-
-if not User.objects.filter(email=email).exists():
-    User.objects.create_superuser(email=email, password=password)
-EOF
+# Bootstrap admin user when credentials are provided
+if { [ -n "${ADMIN_EMAIL}" ] && [ -n "${ADMIN_PASSWORD}" ]; } || \
+   { [ -n "${DJANGO_SUPERUSER_EMAIL}" ] && [ -n "${DJANGO_SUPERUSER_PASSWORD}" ]; }; then
+  python manage.py bootstrap_admin
+else
+  echo "[build] Variáveis ADMIN_EMAIL/DJANGO_SUPERUSER_EMAIL não configuradas. Pulando bootstrap_admin." >&2
+fi
 
