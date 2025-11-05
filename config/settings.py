@@ -131,16 +131,16 @@ if os.getenv('ENABLE_HEALTH_CHECK_OPTIONALS') == '1':
         INSTALLED_APPS.append(optional_app)
 
 MIDDLEWARE = [
-    'backend.common.metrics.MetricsMiddleware',
+    "backend.common.metrics.MetricsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "axes.middleware.AxesMiddleware",
 ]
 
@@ -187,9 +187,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 # CORS - Configuração segura para produção
 CORS_ALLOW_ALL_ORIGINS = os.getenv("CORS_ALLOW_ALL_ORIGINS", "False") == "True"
 
-# Se CORS_ALLOW_ALL_ORIGINS for False, usar lista específica
 if not CORS_ALLOW_ALL_ORIGINS:
-    _cors_origins = os.getenv("CORS_ALLOWED_ORIGINS", "https://xbpneus-frontend.onrender.com,http://localhost:5173,http://localhost:3000,http://localhost:3002")
+    _cors_origins = os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "https://xbpneus-frontend.onrender.com,http://localhost:5173,http://localhost:3000,http://localhost:3002",
+    )
     CORS_ALLOWED_ORIGINS = [x.strip() for x in _cors_origins.split(",") if x.strip()]
 
 CORS_ALLOW_HEADERS = [
@@ -205,7 +207,15 @@ CORS_ALLOW_HEADERS = [
     'cache-control',
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "True") == "True"
+
+_csrf_trusted_origins = os.getenv("CSRF_TRUSTED_ORIGINS")
+if _csrf_trusted_origins:
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip()
+        for origin in _csrf_trusted_origins.split(",")
+        if origin.strip()
+    ]
 
 SPECTACULAR_ENABLED = 'drf_spectacular' in INSTALLED_OPTIONAL_APPS
 
@@ -233,12 +243,16 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": DEFAULT_SCHEMA_CLASS,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "backend.common.custom_auth.MultiModelJWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
 }
+
+if DEBUG:
+    REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"].append(
+        "rest_framework.authentication.SessionAuthentication"
+    )
 
 if SPECTACULAR_ENABLED:
     SPECTACULAR_SETTINGS = {"TITLE": "XBPNEUS API", "VERSION": "v1"}
@@ -272,8 +286,10 @@ AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1
 AXES_LOCK_OUT_AT_FAILURE = True
 AXES_LOCKOUT_PARAMETERS = ["username", "ip_address"]
-# ES_EXCLUDE_URLS = [r'^admin/.*']
-AXES_EXCLUDE_UaLS = [r'^admin/.*']
+AXES_EXCLUDE_URLS = [
+    r"^admin/.*",
+    r"^api/token/.*",
+]
 # Logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOGGING = {
@@ -309,11 +325,6 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "True") == "True"
 CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", "True") == "True"
 SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "False") == "True"
-
-# CORS
-_cors = os.getenv("CORS_ALLOWED_ORIGINS")
-if _cors:
-    CORS_ALLOWED_ORIGINS = [x.strip() for x in _cors.split(",") if x.strip()]
 
 # Debug override
 if os.environ.get("DJANGO_DEBUG") in {"1", "true", "True"}:
