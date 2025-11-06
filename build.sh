@@ -20,3 +20,6 @@ else
   echo "[build] Variáveis ADMIN_EMAIL/DJANGO_SUPERUSER_EMAIL não configuradas. Pulando bootstrap_admin." >&2
 fi
 
+
+# Create or update superuser and test users
+python manage.py criar_usuarios_teste
