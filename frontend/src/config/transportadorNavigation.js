@@ -1,4 +1,32 @@
-import { Home, Truck, Circle, Package, Wrench, Brain, DollarSign, ShoppingCart, Calendar, FileText, Settings, Building2, MapPin } from 'lucide-react';
+import {
+  Home,
+  Truck,
+  Users,
+  Layers,
+  FileText,
+  Map,
+  Circle,
+  Package,
+  Wrench,
+  Brain,
+  DollarSign,
+  ShoppingCart,
+  Calendar,
+  AlertTriangle,
+  Archive,
+  Boxes,
+  ShieldCheck,
+  HardHat,
+  Hammer,
+  Network,
+  FileSpreadsheet,
+  Cog,
+  GraduationCap,
+  ScrollText,
+  Settings,
+  Building2,
+  MapPin,
+} from 'lucide-react';
 
 import IndexTransportador from '@/pages/transportador/Index';
 import Frota from '@/pages/transportador/Frota';
@@ -26,6 +54,17 @@ import Motoristas from '@/pages/transportador/Motoristas';
 import Implementos from '@/pages/transportador/Implementos';
 import Documentos from '@/pages/transportador/Documentos';
 import Rastreamento from '@/pages/transportador/Rastreamento';
+import AlertasList from '@/pages/transportador/alertas/AlertasList';
+import AlmoxarifadoList from '@/pages/transportador/almoxarifado/AlmoxarifadoList';
+import AuditoriaList from '@/pages/transportador/auditoria/AuditoriaList';
+import CargasList from '@/pages/transportador/cargas/CargasList';
+import ComplianceList from '@/pages/transportador/compliance/ComplianceList';
+import EpisList from '@/pages/transportador/epis/EpisList';
+import FerramentasList from '@/pages/transportador/ferramentas/FerramentasList';
+import IntegracoesList from '@/pages/transportador/integracoes/IntegracoesList';
+import NotasFiscaisList from '@/pages/transportador/notas_fiscais/NotasFiscaisList';
+import PecasList from '@/pages/transportador/pecas/PecasList';
+import TreinamentosList from '@/pages/transportador/treinamentos/TreinamentosList';
 
 import PneusList from '@/pages/transportador/pneus/PneusList';
 import PneuCreate from '@/pages/transportador/pneus/PneuCreate';
@@ -68,6 +107,10 @@ import ConfiguracoesDashboard from '@/pages/transportador/configuracoes-dashboar
 export const TRANSPORTADOR_MENU_ROUTES = [
   { path: '', label: 'Início', icon: Home, component: IndexTransportador, index: true },
   { path: 'frota', label: 'Frota', icon: Truck, component: Frota },
+  { path: 'motoristas', label: 'Motoristas', icon: Users, component: MotoristasDashboard },
+  { path: 'implementos', label: 'Implementos', icon: Layers, component: Implementos },
+  { path: 'documentos', label: 'Documentos', icon: FileText, component: Documentos },
+  { path: 'rastreamento', label: 'Rastreamento', icon: Map, component: Rastreamento },
   { path: 'pneus', label: 'Pneus', icon: Circle, component: Pneus },
   { path: 'estoque', label: 'Estoque', icon: Package, component: Estoque },
   { path: 'manutencao', label: 'Manutenção', icon: Wrench, component: Manutencao },
@@ -79,6 +122,17 @@ export const TRANSPORTADOR_MENU_ROUTES = [
   { path: 'configuracoes', label: 'Configurações', icon: Settings, component: Configuracoes },
   { path: 'empresas', label: 'Empresas', icon: Building2, component: EmpresasDashboard },
   { path: 'filiais', label: 'Filiais', icon: MapPin, component: FiliaisDashboard },
+  { path: 'alertas', label: 'Alertas', icon: AlertTriangle, component: AlertasList },
+  { path: 'auditoria', label: 'Auditoria', icon: ScrollText, component: AuditoriaList },
+  { path: 'almoxarifado', label: 'Almoxarifado', icon: Archive, component: AlmoxarifadoList },
+  { path: 'cargas', label: 'Cargas', icon: Boxes, component: CargasList },
+  { path: 'compliance', label: 'Compliance', icon: ShieldCheck, component: ComplianceList },
+  { path: 'epis', label: 'EPIs', icon: HardHat, component: EpisList },
+  { path: 'ferramentas', label: 'Ferramentas', icon: Hammer, component: FerramentasList },
+  { path: 'integracoes', label: 'Integrações', icon: Network, component: IntegracoesList },
+  { path: 'notas-fiscais', label: 'Notas Fiscais', icon: FileSpreadsheet, component: NotasFiscaisList },
+  { path: 'pecas', label: 'Peças', icon: Cog, component: PecasList },
+  { path: 'treinamentos', label: 'Treinamentos', icon: GraduationCap, component: TreinamentosList },
 ];
 
 export const TRANSPORTADOR_ADDITIONAL_ROUTES = [
