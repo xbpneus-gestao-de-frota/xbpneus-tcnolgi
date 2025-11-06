@@ -1,24 +1,23 @@
 import logging
+from importlib import import_module
 
 from backend.common.approval_views import list_pending_users, approve_user, reject_user
-
+from backend.common.auth_views import logout_view, me_view
+from backend.common.register_views import register_full_view
+from backend.common.views import CustomTokenObtainPairView, CustomTokenRefreshView
+from config import temp_user_creation_views, temp_migrate_views, temp_approval_views
 from django.conf import settings
 from django.contrib import admin
-from config import temp_user_creation_views, temp_migrate_views, temp_approval_views
-from django.http import JsonResponse, HttpResponse
-from django.urls import path, include
+from django.http import HttpResponse, JsonResponse
+from django.urls import include, path
 
 try:
     from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 except ImportError:  # pragma: no cover - depende da instalação opcional
     SpectacularAPIView = None
     SpectacularSwaggerView = None
-from rest_framework_simplejwt.views import TokenVerifyView
-from backend.common.views import CustomTokenObtainPairView, CustomTokenRefreshView
-from backend.common.auth_views import logout_view, me_view
-from backend.common.register_views import register_full_view
 from backend.transportador.urls import TRANSPORTADOR_MODULES
-from importlib import import_module
+from rest_framework_simplejwt.views import TokenVerifyView
 
 
 urlpatterns = [
