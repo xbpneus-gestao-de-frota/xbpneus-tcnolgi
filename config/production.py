@@ -78,6 +78,9 @@ CACHES = {
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+STORAGES["staticfiles"] = {
+    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+}
 
 # Media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
