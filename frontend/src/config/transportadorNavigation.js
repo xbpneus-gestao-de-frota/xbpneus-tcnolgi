@@ -1,31 +1,45 @@
 import {
+  Activity,
+  Bell,
+  Briefcase,
+  Calendar,
+  Calculator,
+  Circle,
+  Cog,
+  CreditCard,
+  DollarSign,
+  FileBarChart,
+  FileSignature,
+  FileSpreadsheet,
+  FileText,
+  Fuel,
+  GraduationCap,
+  Gavel,
+  Hammer,
+  HardHat,
   Home,
+  Building2,
+  Layers,
+  Map,
+  MapPin,
+  Navigation,
+  Network,
+  Package,
+  PackageCheck,
+  Route,
+  ScrollText,
+  Settings,
+  Shield,
+  ShieldCheck,
+  ShoppingCart,
   Truck,
   Users,
-  Layers,
-  FileText,
-  Map,
-  Circle,
-  Package,
-  Wrench,
-  Brain,
-  DollarSign,
-  ShoppingCart,
-  Calendar,
+  UserCheck,
   AlertTriangle,
   Archive,
   Boxes,
-  ShieldCheck,
-  HardHat,
-  Hammer,
-  Network,
-  FileSpreadsheet,
-  Cog,
-  GraduationCap,
-  ScrollText,
-  Settings,
-  Building2,
-  MapPin,
+  Brain,
+  Wrench,
 } from 'lucide-react';
 
 import IndexTransportador from '@/pages/transportador/Index';
@@ -35,7 +49,10 @@ import Estoque from '@/pages/transportador/Estoque';
 import Manutencao from '@/pages/transportador/Manutencao';
 import IADashboard from '@/pages/transportador/ia/Dashboard';
 import Financeiro from '@/pages/transportador/Financeiro';
+import Faturamento from '@/pages/transportador/Faturamento';
 import Compras from '@/pages/transportador/Compras';
+import Custos from '@/pages/transportador/Custos';
+import Combustivel from '@/pages/transportador/Combustivel';
 import Eventos from '@/pages/transportador/Eventos';
 import Relatorios from '@/pages/transportador/Relatorios';
 import Configuracoes from '@/pages/transportador/Configuracoes';
@@ -54,6 +71,10 @@ import Motoristas from '@/pages/transportador/Motoristas';
 import Implementos from '@/pages/transportador/Implementos';
 import Documentos from '@/pages/transportador/Documentos';
 import Rastreamento from '@/pages/transportador/Rastreamento';
+import Clientes from '@/pages/transportador/Clientes';
+import Fornecedores from '@/pages/transportador/Fornecedores';
+import Seguros from '@/pages/transportador/Seguros';
+import Contratos from '@/pages/transportador/Contratos';
 import AlertasList from '@/pages/transportador/alertas/AlertasList';
 import AlmoxarifadoList from '@/pages/transportador/almoxarifado/AlmoxarifadoList';
 import AuditoriaList from '@/pages/transportador/auditoria/AuditoriaList';
@@ -65,6 +86,13 @@ import IntegracoesList from '@/pages/transportador/integracoes/IntegracoesList';
 import NotasFiscaisList from '@/pages/transportador/notas_fiscais/NotasFiscaisList';
 import PecasList from '@/pages/transportador/pecas/PecasList';
 import TreinamentosList from '@/pages/transportador/treinamentos/TreinamentosList';
+import Pagamentos from '@/pages/transportador/Pagamentos';
+import Multas from '@/pages/transportador/Multas';
+import Telemetria from '@/pages/transportador/Telemetria';
+import Rotas from '@/pages/transportador/Rotas';
+import Entregas from '@/pages/transportador/Entregas';
+import Notificacoes from '@/pages/transportador/Notificacoes';
+import Viagens from '@/pages/transportador/Viagens';
 
 import PneusList from '@/pages/transportador/pneus/PneusList';
 import PneuCreate from '@/pages/transportador/pneus/PneuCreate';
@@ -116,13 +144,27 @@ export const TRANSPORTADOR_MENU_ROUTES = [
   { path: 'manutencao', label: 'Manutenção', icon: Wrench, component: Manutencao },
   { path: 'ia', label: 'IA - Análise', icon: Brain, component: IADashboard, highlight: true },
   { path: 'financeiro', label: 'Financeiro', icon: DollarSign, component: Financeiro },
+  { path: 'faturamento', label: 'Faturamento', icon: FileBarChart, component: Faturamento },
+  { path: 'pagamentos', label: 'Pagamentos', icon: CreditCard, component: Pagamentos },
+  { path: 'custos', label: 'Custos', icon: Calculator, component: Custos },
+  { path: 'combustivel', label: 'Combustível', icon: Fuel, component: Combustivel },
+  { path: 'multas', label: 'Multas', icon: Gavel, component: Multas },
   { path: 'compras', label: 'Compras', icon: ShoppingCart, component: Compras },
   { path: 'eventos', label: 'Eventos', icon: Calendar, component: Eventos },
   { path: 'relatorios', label: 'Relatórios', icon: FileText, component: Relatorios },
   { path: 'configuracoes', label: 'Configurações', icon: Settings, component: Configuracoes },
   { path: 'empresas', label: 'Empresas', icon: Building2, component: EmpresasDashboard },
   { path: 'filiais', label: 'Filiais', icon: MapPin, component: FiliaisDashboard },
+  { path: 'clientes', label: 'Clientes', icon: UserCheck, component: Clientes },
+  { path: 'fornecedores', label: 'Fornecedores', icon: Briefcase, component: Fornecedores },
+  { path: 'seguros', label: 'Seguros', icon: Shield, component: Seguros },
+  { path: 'contratos', label: 'Contratos', icon: FileSignature, component: Contratos },
+  { path: 'viagens', label: 'Viagens', icon: Navigation, component: Viagens },
+  { path: 'rotas', label: 'Rotas', icon: Route, component: Rotas },
+  { path: 'entregas', label: 'Entregas', icon: PackageCheck, component: Entregas },
   { path: 'alertas', label: 'Alertas', icon: AlertTriangle, component: AlertasList },
+  { path: 'telemetria', label: 'Telemetria', icon: Activity, component: Telemetria },
+  { path: 'notificacoes', label: 'Notificações', icon: Bell, component: Notificacoes },
   { path: 'auditoria', label: 'Auditoria', icon: ScrollText, component: AuditoriaList },
   { path: 'almoxarifado', label: 'Almoxarifado', icon: Archive, component: AlmoxarifadoList },
   { path: 'cargas', label: 'Cargas', icon: Boxes, component: CargasList },
