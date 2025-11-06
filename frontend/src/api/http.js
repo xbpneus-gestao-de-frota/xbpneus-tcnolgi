@@ -115,4 +115,10 @@ api.interceptors.response.use(
   }
 );
 
+export const get = (...args) => api.get(...args);
+export const post = (...args) => api.post(...args);
+export const put = (...args) => api.put(...args);
+export const patch = (...args) => api.patch(...args);
+export const del = (...args) => api.delete(...args);
+
 export default api;
