@@ -4,12 +4,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 
-from transportador.models import UsuarioTransportador
-from motorista.models import UsuarioMotorista
-from motorista_externo.models import UsuarioMotoristaExterno
-from borracharia.models import UsuarioBorracharia
-from revenda.models import UsuarioRevenda
-from recapagem.models import UsuarioRecapagem
+from backend.transportador.models import UsuarioTransportador
+from backend.motorista.models import UsuarioMotorista
+from backend.motorista_externo.models import UsuarioMotoristaExterno
+from backend.borracharia.models import UsuarioBorracharia
+from backend.revenda.models import UsuarioRevenda
+from backend.recapagem.models import UsuarioRecapagem
+
 
 # List of user models and their type identifiers. This makes it easy to
 # iterate across the different profiles without duplicating code.
