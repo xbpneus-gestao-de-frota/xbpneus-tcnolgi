@@ -6,6 +6,7 @@ set -o errexit
 pip install --upgrade pip
 pip install -r requirements.txt
 
+export DJANGO_SETTINGS_MODULE=config.render_production
 # Collect static files
 python manage.py collectstatic --no-input
 
