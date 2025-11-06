@@ -2,7 +2,8 @@ import logging
 
 from backend.common.approval_views import list_pending_users, approve_user, reject_user
 
-from django.conf import settingsfrom django.contrib import admin
+from django.conf import settings
+from django.contrib import admin
 from config import temp_user_creation_views, temp_migrate_views, temp_approval_views
 from django.http import JsonResponse, HttpResponse
 from django.urls import path, include
@@ -34,7 +35,7 @@ urlpatterns = [
 
     # Registro de usuários
     path("api/users/register_full/", register_full_view, name="users-register-full"),
-        path("api/users/pending/", list_pending_users, name="users-pending"),
+    path("api/users/pending/", list_pending_users, name="users-pending"),
     path("api/users/<int:user_id>/approve/", approve_user, name="users-approve"),
     path("api/users/<int:user_id>/reject/", reject_user, name="users-reject"),
 
@@ -43,8 +44,6 @@ urlpatterns = [
 if SpectacularAPIView and SpectacularSwaggerView:
     urlpatterns = [
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-        
- 
         path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"),
     ] + urlpatterns
 
@@ -110,4 +109,3 @@ urlpatterns += [
     path("healthz/", healthz),
     path("metrics/", metrics),
 ]
-
