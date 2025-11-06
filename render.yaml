@@ -39,7 +39,7 @@ services:
       - key: CSRF_COOKIE_SECURE
         value: True
       - key: SECURE_SSL_REDIRECT
-        value: False
+value:  True
       - key: SECURE_HSTS_SECONDS
         value: 31536000
       - key: SECURE_HSTS_INCLUDE_SUBDOMAINS
@@ -76,9 +76,7 @@ services:
     region: oregon
     plan: free
     maxmemoryPolicy: allkeys-lru
-    ipAllowList:
-      - source: 0.0.0.0/0
-        description: Allow all connections
+
 
 databases:
   - name: xbpneus-db
