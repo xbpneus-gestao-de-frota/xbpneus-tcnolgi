@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from backend.transportador.models import UsuarioTransportador
 from backend.motorista.models import UsuarioMotorista
-from backend.motorista_externo.models import UsuarioMotoristaExterno
+from backend.transportador.motorista_externo.models import MotoristaExterno
 from backend.borracharia.models import UsuarioBorracharia
 from backend.revenda.models import UsuarioRevenda
 from backend.recapagem.models import UsuarioRecapagem
@@ -17,7 +17,7 @@ from backend.recapagem.models import UsuarioRecapagem
 USER_MODELS = [
     ("transportador", UsuarioTransportador),
     ("motorista", UsuarioMotorista),
-    ("motorista_externo", UsuarioMotoristaExterno),
+    ("motorista_externo", MotoristaExterno),
     ("borracharia", UsuarioBorracharia),
     ("revenda", UsuarioRevenda),
     ("recapagem", UsuarioRecapagem),
