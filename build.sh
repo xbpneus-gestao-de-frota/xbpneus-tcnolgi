@@ -3,14 +3,14 @@
 set -o errexit
 
 # Install Python dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
+python3.11 -m pip install --upgrade pip
+python3.11 -m pip install -r requirements.txt
 
 export DJANGO_SETTINGS_MODULE=config.render_production
 # Collect static files
-python manage.py collectstatic --no-input
+python3.11 manage.py collectstatic --no-input
 
 # Run migrations
-python manage.py migrate
+python3.11 manage.py migrate
 
 # Note: Removed automatic creation of admin and test users for security.

@@ -39,10 +39,10 @@ test_endpoint() {
     
     if [ "$http_code" = "200" ] || [ "$http_code" = "201" ]; then
         echo -e "${GREEN}✓ Sucesso (HTTP $http_code)${NC}"
-        echo "$body" | python -m json.tool 2>/dev/null || echo "$body"
+        echo "$body" | python3.11 -m json.tool 2>/dev/null || echo "$body"
     else
         echo -e "${RED}✗ Falha (HTTP $http_code)${NC}"
-        echo "$body" | python -m json.tool 2>/dev/null || echo "$body"
+        echo "$body" | python3.11 -m json.tool 2>/dev/null || echo "$body"
     fi
     
     echo ""
@@ -189,7 +189,7 @@ echo ""
 echo -e "${YELLOW}Executando script de aprovação automática...${NC}"
 echo ""
 
-python approve_users.py --all 2>&1 | grep -E "(Aprovado|RESUMO|✅|❌)" || echo "Script de aprovação executado"
+python3.11 approve_users.py --all 2>&1 | grep -E "(Aprovado|RESUMO|✅|❌)" || echo "Script de aprovação executado"
 
 echo ""
 
@@ -306,7 +306,7 @@ for tipo in "${!redirects[@]}"; do
     
     redirect=$(curl -s -X POST "${BASE_URL}/${tipo}/login/" \
         -H "Content-Type: application/json" \
-        -d "$login_data" | python -c "import sys, json; print(json.load(sys.stdin).get('redirect', 'N/A'))" 2>/dev/null)
+        -d "$login_data" | python3.11 -c "import sys, json; print(json.load(sys.stdin).get('redirect', 'N/A'))" 2>/dev/null)
     
     if [ "$redirect" = "$expected" ]; then
         echo -e "${GREEN}✓ Redirect correto: $redirect${NC}"
