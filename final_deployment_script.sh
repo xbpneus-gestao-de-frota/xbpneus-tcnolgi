@@ -41,11 +41,11 @@ source venv/bin/activate
 
 # Executar testes de backend
 print_status "Executando testes de backend..."
-python3.11 improved_backend_check.py > backend_test_final.log 2>&1 || print_warning "Alguns testes de backend falharam"
+python improved_backend_check.py > backend_test_final.log 2>&1 || print_warning "Alguns testes de backend falharam"
 
 # Executar testes de integração
 print_status "Executando testes de integração..."
-python3.11 comprehensive_integration_tests.py > integration_test_final.log 2>&1 || print_warning "Alguns testes de integração falharam"
+python comprehensive_integration_tests.py > integration_test_final.log 2>&1 || print_warning "Alguns testes de integração falharam"
 
 # Verificar status dos serviços
 print_status "Verificando status dos serviços..."
