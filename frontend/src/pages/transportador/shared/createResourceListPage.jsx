@@ -64,22 +64,22 @@ export default function createResourceListPage({
   emptyMessage = 'Nenhum registro encontrado.',
   transformRow,
 }) {
-  const endpointList = useMemo(() => {
-    if (Array.isArray(endpoints) && endpoints.length > 0) {
-      return endpoints;
-    }
-
-    if (resource) {
-      return [
-        `/api/transportador/${resource}/`,
-        `/api/transportador/${resource}`,
-      ];
-    }
-
-    return [];
-  }, [endpoints, resource]);
-
   return function ResourceListPage() {
+    const endpointList = useMemo(() => {
+      if (Array.isArray(endpoints) && endpoints.length > 0) {
+        return endpoints;
+      }
+
+      if (resource) {
+        return [
+          `/api/transportador/${resource}/`,
+          `/api/transportador/${resource}`,
+        ];
+      }
+
+      return [];
+    }, [endpoints, resource]);
+
     const [state, setState] = useState({
       loading: true,
       errorMessage: '',
