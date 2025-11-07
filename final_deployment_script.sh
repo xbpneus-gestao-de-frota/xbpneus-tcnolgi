@@ -39,6 +39,15 @@ fi
 print_status "Ativando ambiente virtual..."
 source venv/bin/activate
 
+# Garantir que o ambiente virtual esteja usando Python 3.11
+REQUIRED_PYTHON_VERSION="3.11"
+CURRENT_PYTHON_VERSION=$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+if [ "$CURRENT_PYTHON_VERSION" != "$REQUIRED_PYTHON_VERSION" ]; then
+    print_error "O ambiente virtual não está usando Python ${REQUIRED_PYTHON_VERSION} (versão atual: ${CURRENT_PYTHON_VERSION}). Recrie o venv com Python ${REQUIRED_PYTHON_VERSION}."
+    exit 1
+fi
+print_status "Ambiente virtual usando Python ${CURRENT_PYTHON_VERSION}"
+
 # Executar testes de backend
 print_status "Executando testes de backend..."
 python improved_backend_check.py > backend_test_final.log 2>&1 || print_warning "Alguns testes de backend falharam"
