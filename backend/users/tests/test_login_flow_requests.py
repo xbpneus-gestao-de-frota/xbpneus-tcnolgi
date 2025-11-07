@@ -6,6 +6,7 @@ import time
 pytestmark = pytest.mark.skip(reason="Requer backend externo publicado para execução.")
 
 BASE_URL = "https://xbpneus-backend.onrender.com"
+REQUEST_TIMEOUT = 10
 
 # Dados para os testes
 TRANSPORTADOR_REGISTER_DATA = {
@@ -37,38 +38,56 @@ ADMIN_LOGIN_DATA = {
 
 @pytest.fixture(scope="module")
 def admin_token():
-    response = requests.post(f"{BASE_URL}/api/token/", json=ADMIN_LOGIN_DATA)
+    response = requests.post(
+        f"{BASE_URL}/api/token/",
+        json=ADMIN_LOGIN_DATA,
+        timeout=REQUEST_TIMEOUT,
+    )
     if response.status_code == 200:
         return response.json()["access"]
     else:
         pytest.fail(f"Falha ao obter token de admin: {response.status_code} - {response.json()}")
 
 def test_1_register_new_transportador():
-    response = requests.post(f"{BASE_URL}/api/users/register_full/", json=TRANSPORTADOR_REGISTER_DATA)
+    response = requests.post(
+        f"{BASE_URL}/api/users/register_full/",
+        json=TRANSPORTADOR_REGISTER_DATA,
+        timeout=REQUEST_TIMEOUT,
+    )
     assert response.status_code == 201, f"Erro no cadastro do transportador: {response.json()}"
     assert "message" in response.json()
     assert "Cadastro realizado com sucesso! Aguarde aprovação do administrador." in response.json()["message"]
 
 def test_2_register_new_motorista():
-    response = requests.post(f"{BASE_URL}/api/users/register_full/", json=MOTORISTA_REGISTER_DATA)
+    response = requests.post(
+        f"{BASE_URL}/api/users/register_full/",
+        json=MOTORISTA_REGISTER_DATA,
+        timeout=REQUEST_TIMEOUT,
+    )
     assert response.status_code == 201, f"Erro no cadastro do motorista: {response.json()}"
     assert "message" in response.json()
     assert "Cadastro realizado com sucesso! Aguarde aprovação do administrador." in response.json()["message"]
 
 def test_3_admin_approve_transportador(admin_token):
     headers = {"Authorization": f"Bearer {admin_token}"}
-    response = requests.post(f"{BASE_URL}/api/approve-user-by-email/", json={
-        "email": TRANSPORTADOR_REGISTER_DATA["email"]
-    }, headers=headers)
+    response = requests.post(
+        f"{BASE_URL}/api/approve-user-by-email/",
+        json={"email": TRANSPORTADOR_REGISTER_DATA["email"]},
+        headers=headers,
+        timeout=REQUEST_TIMEOUT,
+    )
     assert response.status_code == 200, f"Falha na aprovação do transportador: {response.json()}"
     assert "message" in response.json()
     assert "aprovado com sucesso!" in response.json()["message"]
 
 def test_4_admin_approve_motorista(admin_token):
     headers = {"Authorization": f"Bearer {admin_token}"}
-    response = requests.post(f"{BASE_URL}/api/approve-user-by-email/", json={
-        "email": MOTORISTA_REGISTER_DATA["email"]
-    }, headers=headers)
+    response = requests.post(
+        f"{BASE_URL}/api/approve-user-by-email/",
+        json={"email": MOTORISTA_REGISTER_DATA["email"]},
+        headers=headers,
+        timeout=REQUEST_TIMEOUT,
+    )
     assert response.status_code == 200, f"Falha na aprovação do motorista: {response.json()}"
     assert "message" in response.json()
     assert "aprovado com sucesso!" in response.json()["message"]
@@ -78,7 +97,11 @@ def test_5_login_transportador_aprovado():
         "email": TRANSPORTADOR_REGISTER_DATA["email"],
         "password": TRANSPORTADOR_REGISTER_DATA["password"]
     }
-    response = requests.post(f"{BASE_URL}/api/token/", json=login_data)
+    response = requests.post(
+        f"{BASE_URL}/api/token/",
+        json=login_data,
+        timeout=REQUEST_TIMEOUT,
+    )
     assert response.status_code == 200, f"Falha no login do transportador: {response.json()}"
     assert "access" in response.json()
 
@@ -87,7 +110,11 @@ def test_6_login_motorista_aprovado():
         "email": MOTORISTA_REGISTER_DATA["email"],
         "password": MOTORISTA_REGISTER_DATA["password"]
     }
-    response = requests.post(f"{BASE_URL}/api/token/", json=login_data)
+    response = requests.post(
+        f"{BASE_URL}/api/token/",
+        json=login_data,
+        timeout=REQUEST_TIMEOUT,
+    )
     assert response.status_code == 200, f"Falha no login do motorista: {response.json()}"
     assert "access" in response.json()
 
@@ -96,7 +123,11 @@ def test_7_login_existing_transportador():
         "email": "transportador.teste2@xbpneus.com",
         "password": "Teste@2025"
     }
-    response = requests.post(f"{BASE_URL}/api/token/", json=login_data)
+    response = requests.post(
+        f"{BASE_URL}/api/token/",
+        json=login_data,
+        timeout=REQUEST_TIMEOUT,
+    )
     assert response.status_code == 200, f"Falha no login do transportador existente: {response.json()}"
     assert "access" in response.json()
 
