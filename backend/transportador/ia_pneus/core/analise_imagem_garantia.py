@@ -5,6 +5,7 @@ Módulo de Análise de Imagens e Preenchimento de Formulário de Garantia
 Integração com WhatsApp para recebimento de fotos
 """
 
+import logging
 import os
 import json
 from datetime import datetime
@@ -12,6 +13,8 @@ from typing import Dict, List, Optional, Tuple
 import openpyxl
 from openpyxl.styles import Font, Alignment, PatternFill
 from ia_analise_pneus import IAnalisePneus
+
+logger = logging.getLogger(__name__)
 
 class AnalisadorImagemGarantia:
     """
@@ -237,9 +240,13 @@ class AnalisadorImagemGarantia:
                         return
                 # Se não encontrou mesclagem, tentar atribuir direto
                 ws.cell(row, col).value = value
-        except:
-            # Silenciosamente ignorar erros de células mescladas
-            pass
+        except Exception:
+            logger.exception(
+                "Erro ao definir valor da célula mesclada (row=%s, col=%s, value=%r)",
+                row,
+                col,
+                value,
+            )
     
     def preencher_formulario_garantia(self, 
                                      analise_imagens: Dict,

@@ -38,6 +38,10 @@ class IntegracaoWhatsApp:
         self.webhook_verify_token = config.get('webhook_verify_token', '')
         self.numero_whatsapp = config.get('numero_whatsapp', '+5547999999999')
         self.modo = config.get('modo', 'desenvolvimento')
+        try:
+            self.timeout = int(config.get('timeout', 10))
+        except (TypeError, ValueError):
+            self.timeout = 10
         
         # URL base da API do WhatsApp Business
         self.api_url = f"https://graph.facebook.com/v18.0/{self.phone_number_id}/messages"
@@ -220,14 +224,14 @@ class IntegracaoWhatsApp:
         url = f"https://graph.facebook.com/v18.0/{image_id}"
         headers = {'Authorization': f'Bearer {self.access_token}'}
         
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=self.timeout)
         if response.status_code != 200:
             raise Exception(f"Erro ao obter URL da imagem: {response.status_code}")
         
         image_url = response.json().get('url')
         
         # Baixar imagem
-        img_response = requests.get(image_url, headers=headers)
+        img_response = requests.get(image_url, headers=headers, timeout=self.timeout)
         if img_response.status_code != 200:
             raise Exception(f"Erro ao baixar imagem: {img_response.status_code}")
         
@@ -347,7 +351,8 @@ class IntegracaoWhatsApp:
             response = requests.post(
                 self.api_url,
                 headers=self.headers,
-                json=payload
+                json=payload,
+                timeout=self.timeout
             )
             
             if response.status_code == 200:
