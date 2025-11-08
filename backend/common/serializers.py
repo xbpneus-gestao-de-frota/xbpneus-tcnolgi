@@ -35,18 +35,40 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
         ("recapagem", UsuarioRecapagem),
     )
 
-    def _find_user(self, email):
-        for _role, model in self.USER_MODEL_MAP:
-            queryset = model.objects.filter(email__iexact=email)
-            if not queryset.exists():
+    def _find_user(self, email, password):
+        password_matched = False
+        unapproved_match_found = False
+        inactive_match_found = False
+
+        for candidate in self._iter_user_candidates(email):
+            if not candidate.check_password(password):
                 continue
 
-            ordered_queryset = self._order_candidates(queryset, model)
-            user = ordered_queryset.first()
-            if user:
-                return user
+            password_matched = True
 
-        return None
+            if hasattr(candidate, "aprovado") and not candidate.aprovado:
+                unapproved_match_found = True
+                continue
+
+            if not getattr(candidate, "is_active", True):
+                inactive_match_found = True
+                continue
+
+            return candidate, None
+
+        if unapproved_match_found:
+            return None, "unapproved"
+
+        if inactive_match_found or password_matched:
+            return None, "inactive"
+
+        return None, "not_found"
+
+    def _iter_user_candidates(self, email):
+        for _role, model in self.USER_MODEL_MAP:
+            queryset = model.objects.filter(email__iexact=email)
+            for user in self._order_candidates(queryset, model):
+                yield user
 
     def _order_candidates(self, queryset, model):
         ordering = []
@@ -90,9 +112,12 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
         email = attrs.get("email")
         password = attrs.get("password")
 
-        user = self._find_user(email)
+        user, status = self._find_user(email, password)
 
-        if not user or not user.check_password(password):
+        if not user:
+            if status == "unapproved":
+                raise PermissionDenied("Usuário não aprovado pelo administrador.")
+
             raise AuthenticationFailed(
                 self.default_error_messages["no_active_account"],
                 code="no_active_account",
