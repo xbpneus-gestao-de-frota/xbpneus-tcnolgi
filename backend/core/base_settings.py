@@ -136,7 +136,31 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# Django 4.2+ usa a configuração STORAGES para definir as backends padrão.
+# Mantemos o armazenamento local para uploads (default) e habilitamos o
+# ManifestStaticFilesStorage do WhiteNoise para garantir que os assets sejam
+# versionados corretamente em produção.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Garantimos que os finders padrão estejam ativos para que collectstatic localize
+# tanto arquivos dentro dos apps quanto em diretórios estáticos adicionais.
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
+
+# Quando os arquivos estáticos não foram coletados ainda (por exemplo, em builds
+# falhos), permitir o fallback impede 500 no Admin, mantendo o endpoint disponível
+# para troubleshooting até que o pipeline seja corrigido.
+WHITENOISE_MANIFEST_STRICT = False
 
 if DEBUG:
     WHITENOISE_USE_FINDERS = True
