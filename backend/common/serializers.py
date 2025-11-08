@@ -38,10 +38,11 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
     )
 
     def _find_user(self, email, password):
-        password_candidates = []
+        email_match_found = False
         unapproved_match_found = False
         inactive_match_found = False
-        email_match_found = False
+        best_candidate = None
+        best_score = None
 
         for _role, model in self.USER_MODEL_MAP:
             for candidate in model.objects.filter(email__iexact=email):
@@ -50,21 +51,22 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
                 if not candidate.check_password(password):
                     continue
 
-                password_candidates.append(candidate)
+                status = self._candidate_status(candidate)
+                if status == "unapproved":
+                    unapproved_match_found = True
+                    continue
 
-        if not password_candidates:
-            return None, "not_found" if not email_match_found else "invalid_credentials"
+                if status == "inactive":
+                    inactive_match_found = True
+                    continue
 
-        for candidate in sorted(password_candidates, key=self._candidate_sort_key, reverse=True):
-            if hasattr(candidate, "aprovado") and not candidate.aprovado:
-                unapproved_match_found = True
-                continue
+                score = self._candidate_sort_key(candidate)
+                if best_score is None or score > best_score:
+                    best_candidate = candidate
+                    best_score = score
 
-            if not getattr(candidate, "is_active", True):
-                inactive_match_found = True
-                continue
-
-            return candidate, None
+        if best_candidate:
+            return best_candidate, None
 
         if unapproved_match_found:
             return None, "unapproved"
@@ -72,7 +74,17 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
         if inactive_match_found:
             return None, "inactive"
 
+        if not email_match_found:
+            return None, "not_found"
+
         return None, "invalid_credentials"
+
+    def _candidate_status(self, user):
+        if hasattr(user, "aprovado") and not user.aprovado:
+            return "unapproved"
+        if not getattr(user, "is_active", True):
+            return "inactive"
+        return "active"
 
     def _candidate_sort_key(self, user):
         return (
