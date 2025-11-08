@@ -1,4 +1,6 @@
-from django.core.exceptions import FieldDoesNotExist
+from datetime import datetime
+
+from django.utils import timezone
 
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
@@ -36,16 +38,24 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
     )
 
     def _find_user(self, email, password):
-        password_matched = False
+        password_candidates = []
         unapproved_match_found = False
         inactive_match_found = False
+        email_match_found = False
 
-        for candidate in self._iter_user_candidates(email):
-            if not candidate.check_password(password):
-                continue
+        for _role, model in self.USER_MODEL_MAP:
+            for candidate in model.objects.filter(email__iexact=email):
+                email_match_found = True
 
-            password_matched = True
+                if not candidate.check_password(password):
+                    continue
 
+                password_candidates.append(candidate)
+
+        if not password_candidates:
+            return None, "not_found" if not email_match_found else "invalid_credentials"
+
+        for candidate in sorted(password_candidates, key=self._candidate_sort_key, reverse=True):
             if hasattr(candidate, "aprovado") and not candidate.aprovado:
                 unapproved_match_found = True
                 continue
@@ -59,39 +69,46 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
         if unapproved_match_found:
             return None, "unapproved"
 
-        if inactive_match_found or password_matched:
+        if inactive_match_found:
             return None, "inactive"
 
-        return None, "not_found"
+        return None, "invalid_credentials"
 
-    def _iter_user_candidates(self, email):
-        for _role, model in self.USER_MODEL_MAP:
-            queryset = model.objects.filter(email__iexact=email)
-            for user in self._order_candidates(queryset, model):
-                yield user
-
-    def _order_candidates(self, queryset, model):
-        ordering = []
-
-        for field in ("aprovado", "is_active"):
-            if self._model_has_field(model, field):
-                ordering.append(f"-{field}")
-
-        for field in ("aprovado_em", "atualizado_em", "criado_em"):
-            if self._model_has_field(model, field):
-                ordering.append(f"-{field}")
-
-        ordering.append("-pk")
-
-        return queryset.order_by(*ordering)
+    def _candidate_sort_key(self, user):
+        return (
+            1 if getattr(user, "aprovado", True) else 0,
+            1 if getattr(user, "is_active", True) else 0,
+            self._datetime_score(getattr(user, "aprovado_em", None)),
+            self._datetime_score(getattr(user, "atualizado_em", None)),
+            self._datetime_score(getattr(user, "criado_em", None)),
+            self._pk_score(user.pk),
+        )
 
     @staticmethod
-    def _model_has_field(model, field_name):
+    def _datetime_score(value):
+        if not isinstance(value, datetime):
+            return float("-inf")
+
+        if timezone.is_aware(value):
+            value = timezone.make_naive(value, timezone.utc)
+
         try:
-            model._meta.get_field(field_name)
-        except (LookupError, FieldDoesNotExist):
-            return False
-        return True
+            return value.timestamp()
+        except (OverflowError, OSError, ValueError):
+            return float("-inf")
+
+    @staticmethod
+    def _pk_score(value):
+        if isinstance(value, int):
+            return value
+
+        if hasattr(value, "int"):
+            return value.int
+
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return 0
 
     def _get_role(self, user):
         if getattr(user, "is_superuser", False) or getattr(user, "is_staff", False):
