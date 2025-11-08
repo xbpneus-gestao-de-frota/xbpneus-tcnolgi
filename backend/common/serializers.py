@@ -35,10 +35,25 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
 
     def _find_user(self, email):
         for _role, model in self.USER_MODEL_MAP:
-            try:
-                return model.objects.get(email__iexact=email)
-            except model.DoesNotExist:
+            queryset = model.objects.filter(email__iexact=email)
+            if not queryset.exists():
                 continue
+
+            active_queryset = queryset
+
+            if hasattr(model, "aprovado"):
+                approved_queryset = active_queryset.filter(aprovado=True)
+                if approved_queryset.exists():
+                    active_queryset = approved_queryset
+
+            if hasattr(model, "is_active"):
+                enabled_queryset = active_queryset.filter(is_active=True)
+                if enabled_queryset.exists():
+                    active_queryset = enabled_queryset
+
+            user = active_queryset.order_by("-pk").first()
+            if user:
+                return user
         return None
 
     def _get_role(self, user):
