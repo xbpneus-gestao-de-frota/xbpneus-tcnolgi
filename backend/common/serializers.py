@@ -1,3 +1,5 @@
+from django.core.exceptions import FieldDoesNotExist
+
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
 from rest_framework_simplejwt.exceptions import TokenError
@@ -35,11 +37,39 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
 
     def _find_user(self, email):
         for _role, model in self.USER_MODEL_MAP:
-            try:
-                return model.objects.get(email__iexact=email)
-            except model.DoesNotExist:
+            queryset = model.objects.filter(email__iexact=email)
+            if not queryset.exists():
                 continue
+
+            ordered_queryset = self._order_candidates(queryset, model)
+            user = ordered_queryset.first()
+            if user:
+                return user
+
         return None
+
+    def _order_candidates(self, queryset, model):
+        ordering = []
+
+        for field in ("aprovado", "is_active"):
+            if self._model_has_field(model, field):
+                ordering.append(f"-{field}")
+
+        for field in ("aprovado_em", "atualizado_em", "criado_em"):
+            if self._model_has_field(model, field):
+                ordering.append(f"-{field}")
+
+        ordering.append("-pk")
+
+        return queryset.order_by(*ordering)
+
+    @staticmethod
+    def _model_has_field(model, field_name):
+        try:
+            model._meta.get_field(field_name)
+        except (LookupError, FieldDoesNotExist):
+            return False
+        return True
 
     def _get_role(self, user):
         if getattr(user, "is_superuser", False) or getattr(user, "is_staff", False):
