@@ -142,17 +142,26 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # ManifestStaticFilesStorage do WhiteNoise para garantir que os assets sejam
 # versionados corretamente em produção. Caso alguma configuração filha já
 # tenha definido STORAGES, apenas complementamos os valores necessários para o
-# backend funcionar corretamente.
-STORAGES = dict(globals().get("STORAGES", {}))
+# backend funcionar corretamente. Também preservamos STATICFILES_STORAGE para
+# compatibilidade com configurações legadas que ainda referenciam essa opção.
+_existing_storages = globals().get("STORAGES")
+if _existing_storages:
+    STORAGES = dict(_existing_storages)
+else:
+    STORAGES = {}
+
 STORAGES.setdefault(
     "default",
     {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
 )
+
 STORAGES["staticfiles"] = {
     "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
 }
+
+STATICFILES_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 
 # Garantimos que os finders padrão estejam ativos para que collectstatic localize
 # tanto arquivos dentro dos apps quanto em diretórios estáticos adicionais.
