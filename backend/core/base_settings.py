@@ -148,12 +148,19 @@ STORAGES.setdefault(
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
 )
-STORAGES.setdefault(
-    "staticfiles",
-    {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-)
+
+_WHITENOISE_STATIC_BACKEND = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+existing_staticfiles_storage = STORAGES.get("staticfiles") or {}
+staticfiles_storage = dict(existing_staticfiles_storage)
+staticfiles_backend = staticfiles_storage.get("BACKEND")
+
+if not staticfiles_backend or (
+    "whitenoise." not in staticfiles_backend
+    or not staticfiles_backend.endswith("CompressedManifestStaticFilesStorage")
+):
+    staticfiles_storage["BACKEND"] = _WHITENOISE_STATIC_BACKEND
+
+STORAGES["staticfiles"] = staticfiles_storage
 
 # Garantimos que os finders padrão estejam ativos para que collectstatic localize
 # tanto arquivos dentro dos apps quanto em diretórios estáticos adicionais.
