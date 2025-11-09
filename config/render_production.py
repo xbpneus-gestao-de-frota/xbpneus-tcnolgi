@@ -101,7 +101,8 @@ STORAGES["staticfiles"] = {
 }
 
 # WhiteNoise - Servir arquivos estáticos
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+if 'whitenoise.middleware.WhiteNoiseMiddleware' not in MIDDLEWARE:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 # Media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
