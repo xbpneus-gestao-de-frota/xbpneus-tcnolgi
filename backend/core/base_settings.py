@@ -1,5 +1,4 @@
 from pathlib import Path
-import os
 import dj_database_url
 from decouple import config
 from datetime import timedelta
@@ -157,11 +156,14 @@ STORAGES.setdefault(
     },
 )
 
-STORAGES["staticfiles"] = {
-    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-}
+_staticfiles_storage = STORAGES.setdefault(
+    "staticfiles",
+    {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+)
 
-STATICFILES_STORAGE = STORAGES["staticfiles"]["BACKEND"]
+STATICFILES_STORAGE = _staticfiles_storage.get(
+    "BACKEND", "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
 
 # Garantimos que os finders padrão estejam ativos para que collectstatic localize
 # tanto arquivos dentro dos apps quanto em diretórios estáticos adicionais.
