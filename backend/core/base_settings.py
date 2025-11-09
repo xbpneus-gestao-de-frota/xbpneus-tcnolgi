@@ -150,17 +150,14 @@ STORAGES.setdefault(
 )
 
 _WHITENOISE_STATIC_BACKEND = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-_staticfiles_storage = STORAGES.get("staticfiles", {})
-_staticfiles_backend = _staticfiles_storage.get("BACKEND")
+staticfiles_storage = STORAGES.setdefault("staticfiles", {})
+staticfiles_backend = staticfiles_storage.get("BACKEND")
 
-if not _staticfiles_backend or (
-    "whitenoise." not in _staticfiles_backend
-    or not _staticfiles_backend.endswith("CompressedManifestStaticFilesStorage")
+if not staticfiles_backend or (
+    "whitenoise." not in staticfiles_backend
+    or not staticfiles_backend.endswith("CompressedManifestStaticFilesStorage")
 ):
-    # Preserve any extra configuration keys (e.g. custom storage options)
-    preserved_options = dict(_staticfiles_storage)
-    preserved_options["BACKEND"] = _WHITENOISE_STATIC_BACKEND
-    STORAGES["staticfiles"] = preserved_options
+    staticfiles_storage["BACKEND"] = _WHITENOISE_STATIC_BACKEND
 
 # Garantimos que os finders padrão estejam ativos para que collectstatic localize
 # tanto arquivos dentro dos apps quanto em diretórios estáticos adicionais.

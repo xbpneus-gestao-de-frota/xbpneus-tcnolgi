@@ -96,14 +96,14 @@ else:
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-_staticfiles_backend = STORAGES.get("staticfiles", {}).get("BACKEND")
+_WHITENOISE_STATIC_BACKEND = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+_staticfiles_storage = STORAGES.setdefault("staticfiles", {})
+_staticfiles_backend = _staticfiles_storage.get("BACKEND")
 if not _staticfiles_backend or (
     "whitenoise." not in _staticfiles_backend
     or not _staticfiles_backend.endswith("CompressedManifestStaticFilesStorage")
 ):
-    STORAGES["staticfiles"] = {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    }
+    _staticfiles_storage["BACKEND"] = _WHITENOISE_STATIC_BACKEND
 
 # WhiteNoise - Servir arquivos estáticos
 if 'whitenoise.middleware.WhiteNoiseMiddleware' not in MIDDLEWARE:
