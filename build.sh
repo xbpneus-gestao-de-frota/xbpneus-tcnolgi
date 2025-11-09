@@ -4,7 +4,7 @@ set -o errexit
 
 # Install Python dependencies
 python3.11 -m pip install --upgrade pip
-python3.11 -m pip install -r requirements.txt
+python3.11 -m pip install -r backend/requirements.txt
 
 export DJANGO_SETTINGS_MODULE=config.render_production
 # Collect static files

@@ -135,19 +135,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Django 4.2+ usa a configuração STORAGES para definir as backends padrão.
 # Mantemos o armazenamento local para uploads (default) e habilitamos o
 # ManifestStaticFilesStorage do WhiteNoise para garantir que os assets sejam
-# versionados corretamente em produção.
-STORAGES = {
-    "default": {
+# versionados corretamente em produção. Caso alguma configuração filha já
+# tenha definido STORAGES, apenas complementamos os valores necessários para o
+# backend funcionar corretamente.
+STORAGES = dict(globals().get("STORAGES", {}))
+STORAGES.setdefault(
+    "default",
+    {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+)
+STORAGES["staticfiles"] = {
+    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
 }
 
 # Garantimos que os finders padrão estejam ativos para que collectstatic localize
