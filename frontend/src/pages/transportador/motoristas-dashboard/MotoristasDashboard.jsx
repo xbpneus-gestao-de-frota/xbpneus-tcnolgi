@@ -5,7 +5,6 @@ export default function MotoristasDashboard() {
   const items = [
     ["Listar Motoristas", transportadorPath("frota/motoristas/lista")],
     ["Cadastrar Motorista", transportadorPath("frota/motoristas/novo")],
-    ["Documentos", transportadorPath("frota/motoristas/documentos")],
     ["CNH e Vencimentos", transportadorPath("frota/motoristas/cnh")],
   ];
   return (

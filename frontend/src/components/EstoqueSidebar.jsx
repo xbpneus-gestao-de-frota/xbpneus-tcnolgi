@@ -1,13 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
   Gauge,
-  List,
   Plus,
   Settings,
   ArrowLeft,
   Package,
   Truck,
-  ClipboardList,
   History
 } from 'lucide-react';
 
@@ -40,11 +38,6 @@ export default function EstoqueSidebar() {
       name: 'Saídas',
       path: '/dashboard/estoque-dashboard/saidas',
       icon: Truck
-    },
-    {
-      name: 'Relatórios',
-      path: '/dashboard/estoque-dashboard/relatorios',
-      icon: ClipboardList
     },
     {
       name: 'Configurações',

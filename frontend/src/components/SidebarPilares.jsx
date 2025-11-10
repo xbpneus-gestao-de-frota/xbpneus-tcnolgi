@@ -22,10 +22,6 @@ const PILARES = [
     "label": "Motorista"
   },
   {
-    "slug": "relatorios",
-    "label": "Relatorios"
-  },
-  {
     "slug": "ia",
     "label": "Ia"
   },

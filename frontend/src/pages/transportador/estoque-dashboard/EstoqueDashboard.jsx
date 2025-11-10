@@ -3,7 +3,6 @@ import {
   Gauge,
   Package,
   Truck,
-  ClipboardList,
   History,
   AlertTriangle,
   CheckCircle,
@@ -44,12 +43,6 @@ export default function EstoqueDashboard() {
       to: transportadorPath('estoque-dashboard/saidas'),
       color: 'orange'
     },
-    {
-      title: 'Relatórios',
-      description: 'Gerar relatórios de estoque e movimentações',
-      icon: ClipboardList,
-      to: transportadorPath('estoque-dashboard/relatorios'),
-      color: 'red'
     }
   ];
 
@@ -122,7 +115,6 @@ export default function EstoqueDashboard() {
               green: 'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
               purple: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
               orange: 'from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700',
-              red: 'from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
               emerald: 'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700'
             };
 

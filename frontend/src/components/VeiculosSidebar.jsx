@@ -1,10 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
-import { 
+import {
   List,
   Plus,
-  Trash2,
   Link as LinkIcon,
-  FileText,
   Settings,
   ArrowLeft,
   Gauge
@@ -34,11 +32,6 @@ export default function VeiculosSidebar() {
       name: 'Adicionar Implemento', 
       path: '/dashboard/frota-dashboard/veiculos/implemento', 
       icon: LinkIcon 
-    },
-    { 
-      name: 'Documentos', 
-      path: '/dashboard/frota-dashboard/veiculos/documentos', 
-      icon: FileText 
     },
     { 
       name: 'Configurações', 

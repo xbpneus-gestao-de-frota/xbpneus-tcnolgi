@@ -12,11 +12,7 @@ const KNOWN_MAP = {
   "ia:garantias": "/ia/garantias",
   "estoque:entradas": "/estoque/entradas",
   "estoque:saidas": "/estoque/saidas",
-  "estoque:inventario": "/estoque/inventario",
-  "relatorios:frota": "/relatorios/frota",
-  "relatorios:pneus": "/relatorios/pneus",
-  "relatorios:manutencao": "/relatorios/manutencao",
-  "relatorios:financeiros": "/relatorios/financeiros"
+  "estoque:inventario": "/estoque/inventario"
 };
 
 export default function SubPage(){

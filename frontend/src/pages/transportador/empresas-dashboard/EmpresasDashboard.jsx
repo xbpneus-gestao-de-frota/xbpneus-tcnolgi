@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Building2, MapPin, Users, FileText, Settings, BarChart3 } from 'lucide-react';
+import { Building2, MapPin, Users, Settings } from 'lucide-react';
 import { transportadorPath } from '@/config/transportadorPaths';
 
 function ModuleCard({ title, description, icon: Icon, to, color = "blue", stats }) {
@@ -85,15 +85,6 @@ export default function EmpresasDashboard() {
             <Users className="h-10 w-10 text-purple-400" />
           </div>
         </div>
-        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 p-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-white/70">Documentos</p>
-              <p className="text-3xl font-bold text-white mt-2">45</p>
-            </div>
-            <FileText className="h-10 w-10 text-orange-400" />
-          </div>
-        </div>
       </div>
 
       {/* Module Cards */}
@@ -123,21 +114,6 @@ export default function EmpresasDashboard() {
             to={transportadorPath('empresas-dashboard/agregados')}
             color="purple"
             stats="8"
-          />
-          <ModuleCard
-            title="Documentos"
-            description="Documentação e arquivos das empresas"
-            icon={FileText}
-            to={transportadorPath('empresas-dashboard/documentos')}
-            color="orange"
-            stats="45"
-          />
-          <ModuleCard
-            title="Relatórios"
-            description="Relatórios e análises de desempenho"
-            icon={BarChart3}
-            to={transportadorPath('empresas-dashboard/relatorios')}
-            color="indigo"
           />
           <ModuleCard
             title="Configurações"

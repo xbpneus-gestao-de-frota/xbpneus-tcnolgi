@@ -6,7 +6,6 @@ export default function Estoque() {
     { label: "Movimentações", to: "movimentacoes", desc: "Visualize e gerencie todas as movimentações de estoque." },
     { label: "Itens de Estoque", to: "itens", desc: "Gerencie os itens disponíveis no seu estoque." },
     { label: "Entradas/Saídas", to: "entradas-saidas", desc: "Registre e acompanhe as entradas e saídas de produtos." },
-    { label: "Relatórios de Estoque", to: "relatorios-estoque", desc: "Acesse relatórios detalhados sobre o seu estoque." },
   ];
 
   return (

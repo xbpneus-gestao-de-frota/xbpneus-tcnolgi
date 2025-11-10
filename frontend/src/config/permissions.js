@@ -16,7 +16,7 @@ export const ROLES = {
 export const ROLE_PERMISSIONS = {
   [ROLES.TRANSPORTADOR]: {
     dashboard: '/dashboard',
-    routes: ['/dashboard', '/frota', '/pneus', '/estoque', '/manutencao', '/motoristas', '/relatorios'],
+    routes: ['/dashboard', '/frota', '/pneus', '/estoque', '/manutencao', '/motoristas', '/financeiro'],
     label: 'Transportador',
   },
   [ROLES.MOTORISTA]: {

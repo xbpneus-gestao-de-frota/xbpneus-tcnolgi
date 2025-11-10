@@ -2,11 +2,8 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Gauge,
   Wrench,
-  ClipboardList,
-  Plus,
   Settings,
   ArrowLeft,
-  FileText,
   CheckCircle
 } from 'lucide-react';
 
@@ -29,11 +26,6 @@ export default function ManutencaoSidebar() {
       name: 'Testes Pós-Manutenção',
       path: '/dashboard/manutencao-dashboard/testes',
       icon: CheckCircle
-    },
-    {
-      name: 'Relatórios',
-      path: '/dashboard/manutencao-dashboard/relatorios',
-      icon: ClipboardList
     },
     {
       name: 'Configurações',

@@ -1,9 +1,8 @@
 import { NavLink } from "react-router-dom";
-import { 
-  Building2, 
-  MapPin, 
-  Users, 
-  FileText,
+import {
+  Building2,
+  MapPin,
+  Users,
   Settings,
   BarChart3,
   ArrowLeft
@@ -14,7 +13,6 @@ const items = [
   { to: "/dashboard/empresas-dashboard/empresas", label: "Empresas", icon: Building2 },
   { to: "/dashboard/empresas-dashboard/filiais", label: "Filiais", icon: MapPin },
   { to: "/dashboard/empresas-dashboard/agregados", label: "Agregados", icon: Users },
-  { to: "/dashboard/empresas-dashboard/documentos", label: "Documentos", icon: FileText },
   { to: "/dashboard/empresas-dashboard/configuracoes", label: "Configurações", icon: Settings },
 ];
 

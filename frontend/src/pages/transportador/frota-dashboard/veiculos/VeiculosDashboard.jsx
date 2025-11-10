@@ -3,7 +3,6 @@ import {
   List,
   Plus,
   Link as LinkIcon,
-  FileText,
   Truck,
   CheckCircle,
   AlertTriangle,
@@ -36,12 +35,6 @@ export default function VeiculosDashboard() {
       to: transportadorPath('frota/implementos'),
       color: 'purple'
     },
-    {
-      title: 'Documentos',
-      description: 'Gerenciar documentos dos veículos',
-      icon: FileText,
-      to: transportadorPath('frota/documentos'),
-      color: 'orange'
     }
   ];
 

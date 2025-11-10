@@ -5,8 +5,7 @@ export const PILLARS = [
     subs: [
       { key: "veiculos", label: "Veículos" },
       { key: "cadastro-veiculo", label: "Cadastro de Veículo" },
-      { key: "checklists", label: "Checklists" },
-      { key: "telemetria", label: "Telemetria" }
+      { key: "checklists", label: "Checklists" }
     ]
   },
   {
@@ -54,16 +53,6 @@ export const PILLARS = [
       { key: "analise", label: "Análise" },
       { key: "gamificacao", label: "Gamificação" },
       { key: "garantias", label: "Garantias" }
-    ]
-  },
-  {
-    key: "relatorios",
-    label: "Relatórios",
-    subs: [
-      { key: "frota", label: "Relatórios de Frota" },
-      { key: "pneus", label: "Relatórios de Pneus" },
-      { key: "manutencao", label: "Relatórios de Manutenção" },
-      { key: "financeiros", label: "Relatórios Financeiros" }
     ]
   }
 ];

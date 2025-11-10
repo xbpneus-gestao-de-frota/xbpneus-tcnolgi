@@ -14,7 +14,6 @@ from backend.transportador.frota.models import Vehicle, Position
 from backend.transportador.estoque.models import MovimentacaoEstoque
 from backend.transportador.manutencao.models import OrdemServico, StatusOS
 from backend.transportador.pneus.models import Tire
-from backend.transportador.alertas.models import Alerta
 
 
 @api_view(['GET'])
@@ -243,8 +242,6 @@ def dashboard_stats_view(request):
         data_conclusao__isnull=False,
         data_conclusao__gte=timezone.now() - timedelta(days=30),
     ).count()
-
-    stats['alertas_ativos'] = Alerta.objects.filter(ativo=True).count()
 
     return Response(stats)
 

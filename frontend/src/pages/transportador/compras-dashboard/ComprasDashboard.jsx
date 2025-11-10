@@ -6,7 +6,6 @@ export default function ComprasDashboard() {
     ["Requisições", transportadorPath("compras/requisicoes")],
     ["Cotações", transportadorPath("compras/cotacoes")],
     ["Ordens de Compra", transportadorPath("compras/ocs")],
-    ["Fornecedores", transportadorPath("fornecedores/fornecedores")],
   ];
   return (
     <div className="space-y-6">
