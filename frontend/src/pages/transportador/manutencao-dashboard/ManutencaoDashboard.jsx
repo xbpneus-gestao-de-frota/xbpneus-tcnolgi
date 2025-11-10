@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import {
   Gauge,
   Wrench,
-  ClipboardList,
   AlertTriangle,
   CheckCircle,
   CalendarCheck,
@@ -28,13 +27,6 @@ export default function ManutencaoDashboard() {
       icon: CheckCircle,
       to: transportadorPath('manutencao/testes-pos-manutencao'),
       color: 'green'
-    },
-    {
-      title: 'Relatórios',
-      description: 'Gerar relatórios de manutenção e desempenho da frota',
-      icon: ClipboardList,
-      to: transportadorPath('relatorios/manutencao'),
-      color: 'purple'
     },
     {
       title: 'Configurações',

@@ -2,7 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './TransportadorDashboard.css';
 
-const tiles = ["frota/motoristas", "relatorios/frota", "relatorios/pneus", "frota/rastreamento", "relatorios/estoque", "relatorios/financeiro", "relatorios/manutencao", "pneus/manutencao-pneus", "estoque/relatorios-estoque", "/dashboard/frota-dashboard/motoristas", "/dashboard/pneus-dashboard/manutencao", "/dashboard/estoque-dashboard/relatorios"]; // will be replaced programmatically
+const tiles = [
+  'frota/motoristas',
+  'frota/rastreamento',
+  'pneus/manutencao-pneus',
+  'estoque/movimentacoes',
+  'manutencao/ordens-servico',
+  'financeiro/visao-geral',
+  'compras/dashboard',
+  'eventos/visao-geral',
+  'configuracoes/visao-geral',
+]; // will be replaced programmatically
 
 export default function TransportadorDashboard() {
   const links = tiles;

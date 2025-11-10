@@ -5,8 +5,6 @@ export default function ConfiguracoesDashboard() {
   const items = [
     ["Usuários", transportadorPath("configuracoes/usuarios")],
     ["Perfis & Permissões", transportadorPath("configuracoes/perfis")],
-    ["Integrações", transportadorPath("configuracoes/integracoes")],
-    ["Notificações", transportadorPath("configuracoes/notificacoes")],
   ];
   return (
     <div className="space-y-6">

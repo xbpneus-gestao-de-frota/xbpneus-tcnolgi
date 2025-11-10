@@ -5,7 +5,6 @@ export default function EventosDashboard() {
   const items = [
     ["Eventos de Pneus", transportadorPath("eventos/pneus")],
     ["Eventos de Manutenção", transportadorPath("eventos/manutencao")],
-    ["Alertas do Sistema", transportadorPath("eventos/alertas")],
     ["Logs", transportadorPath("eventos/logs")],
   ];
   return (

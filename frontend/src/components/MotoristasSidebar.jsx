@@ -1,9 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
-import { 
+import {
   List,
   Plus,
   Link as LinkIcon,
-  FileText,
   Award,
   Settings,
   ArrowLeft,
@@ -39,11 +38,6 @@ export default function MotoristasSidebar() {
       name: 'Habilitações', 
       path: '/dashboard/frota-dashboard/motoristas/habilitacoes', 
       icon: Award 
-    },
-    { 
-      name: 'Documentos', 
-      path: '/dashboard/frota-dashboard/motoristas/documentos', 
-      icon: FileText 
     },
     { 
       name: 'Configurações', 
