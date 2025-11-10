@@ -118,9 +118,23 @@ class PlanoManutencaoPreventivaAdmin(admin.ModelAdmin):
     readonly_fields = ['criado_em', 'atualizado_em']
     
     fieldsets = (
-        ('Informações Básicas', {
-            'fields': ('empresa', 'veiculo', 'nome', 'descricao', 'ativo')
-        }),
+        (
+            'Informações Básicas',
+            {
+                'fields': (
+                    'veiculo',
+                    'nome',
+                    'descricao',
+                    'ativo',
+                ),
+                'description': (
+                    'O campo ``empresa`` foi removido do modelo em revisões '
+                    'recentes, portanto não pode ser exposto aqui. '
+                    'Manter a referência quebrava o carregamento do admin '
+                    'com FieldError.'
+                ),
+            },
+        ),
         ('Periodicidade', {
             'fields': ('periodicidade_km', 'periodicidade_dias')
         }),
